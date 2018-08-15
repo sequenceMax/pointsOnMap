@@ -1,0 +1,15 @@
+{% extends 'mainApp/wrapper.html' %}
+
+{% block title %}
+    main page map
+{% endblock %}
+
+
+{% block content %}
+
+    {% for obj in object_list %}
+        <a href="article/{{ obj.id }}">{{ obj.title }}</a>
+        <br>
+    {% endfor %}
+
+{% endblock %}

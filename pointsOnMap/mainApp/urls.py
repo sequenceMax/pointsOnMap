@@ -1,11 +1,14 @@
-from django.urls import path
+from django.conf.urls import url
+from django.urls import path, include
 from django.views.generic import ListView, DetailView
+from rest_framework import routers
+
+from mainApp import views
 from mainApp.models import Point
 
+router = routers.DefaultRouter()
+router.register(r'points', views.PointViewSet, base_name='pointRouter')
 
 urlpatterns = [
-    path('', ListView.as_view(queryset=Point.objects.all().order_by("title"),
-                              template_name="mainApp/home.html")),
-    path('article/<int:pk>',
-         DetailView.as_view(model=Point, template_name="mainApp/article.html")),
+    url('', include(router.urls)),
 ]

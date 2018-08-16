@@ -7,7 +7,14 @@
 
 {% block content %}
 
-    {% for obj in object_list %}
+    <div class="container">
+        <div class="row">
+            <div>
+                {{ form }}
+            </div>
+        </div>
+    </div>
+    {% for obj in point_list %}
         <a href="article/{{ obj.id }}">{{ obj.title }}</a>
         <br>
     {% endfor %}

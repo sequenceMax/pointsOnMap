@@ -11,7 +11,7 @@ class PointAdmin(admin.ModelAdmin):
 
 
 class IconAdmin(admin.ModelAdmin):
-    list_display = ["title", "path"]
+    list_display = ["title"]
     search_fields = ["title"]
 
     class Meta:

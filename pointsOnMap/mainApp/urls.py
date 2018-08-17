@@ -1,14 +1,17 @@
 from django.conf.urls import url
-from django.urls import path, include
-from django.views.generic import ListView, DetailView
+from django.urls import include, path
 from rest_framework import routers
 
 from mainApp import views
-from mainApp.models import Point
 
 router = routers.DefaultRouter()
-router.register(r'points', views.PointViewSet, base_name='pointRouter')
+router.register('icons', views.IconViewSet, base_name='iconRouter')
+router.register('points', views.PointViewSet, base_name='pointRouter')
+
 
 urlpatterns = [
-    url('', include(router.urls)),
+    path('api/', include(router.urls)),
+    url('', views.test),
 ]
+
+

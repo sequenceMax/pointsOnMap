@@ -52,15 +52,13 @@
 
 
       var iconFeature = new ol.Feature({
-        geometry: new ol.geom.Point([0, 0]),
+        geometry: new ol.geom.Point(39.710919, 47.240019),
         name: 'Null Island',
-        population: 50000,
-        rainfall: 500
       });
 
       var iconStyle = new ol.style.Style({
         image: new ol.style.Icon(/** @type {module:ol/style/Icon~Options} */ ({
-          anchor: [0.5, 46],
+          anchor: [0, 0],
           anchorXUnits: 'fraction',
           anchorYUnits: 'pixels',
           src: '/static/mainApp/js/img/food.png'
@@ -70,7 +68,7 @@
       iconFeature.setStyle(iconStyle);
 
       var vectorSource = new ol.source.Vector({
-        features: [iconFeature]
+        features: [iconFeature] //
       });
 
       var vectorLayer = new ol.layer.Vector({
@@ -78,18 +76,15 @@
       });
 
       var rasterLayer = new ol.layer.Tile({
-        source: new ol.source.TileJSON({
-          url: 'https://api.tiles.mapbox.com/v3/mapbox.geography-class.json?secure',
-          crossOrigin: ''
-        })
+        source: new ol.source.OSM()
       });
 
       var map = new ol.Map({
-        layers: [rasterLayer, vectorLayer],
+        layers: [rasterLayer, vectorLayer],  // слои
         target: document.getElementById('map'),
         view: new ol.View({
-          center: [0, 0],
-          zoom: 3
+          center: ol.proj.fromLonLat([39.710919, 47.240019]),
+          zoom: 14
         })
       });
 

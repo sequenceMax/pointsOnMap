@@ -1,4 +1,8 @@
 .map {
-    width: 700px;
     height: 350px;
+}
+
+#main {
+    height: 600px;
+    overflow-y: scroll;
 }

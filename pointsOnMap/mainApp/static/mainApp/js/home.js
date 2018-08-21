@@ -256,30 +256,22 @@ function savePoint(form) {
     var dataSend = {
     "data": {
         "type": "Point",
-        "id": "4",
         "attributes": {
             "title": form.titleId.value,
             "description": form.descriptionId.value,
             "x": form.coordinateXId.value ,
-            "y": form.coordinateYId.value
-        },
-        "relationships": {
-            "icon": {
-                "data": {
-                    "type": "Icon",
-                    "id": form.chooseIconId.value
-                }
-            }
+            "y": form.coordinateYId.value,
+            "icon": form.chooseIconId.value
         }
     }
-}
+};
 
 
 
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', '/api/points/', true);
+    xhr.open('POST', '/api/points/', false);
     xhr.setRequestHeader('Content-Type', 'application/vnd.api+json');
-    xhr.setRequestHeader('', '');
+    xhr.setRequestHeader('Authorization', 'Token d2ca14ecfd5a10dbb26296dccc4d510b0396fe3a');
 
     xhr.send(JSON.stringify(dataSend));
 debugger

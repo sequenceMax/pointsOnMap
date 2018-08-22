@@ -159,14 +159,14 @@ pointCollection.add(points);
 var PointView = Backbone.View.extend({
 
     initialize: function () {
-        this.render();
+        this.model.on('destroy', this.render, this);
     },
     className: 'rightInnerBlock',
     id: function () {
         return this.model.get('id');
     },
     template: _.template('<div class="row">\n' +
-        '                <div class="card text-white bg-info mb-3" style="width: 30rem;">\n' +
+        '                <div class="card text-white bg-info mb-3" style="width: 36rem;">\n' +
         '                    <div class="card-header"><%= relationships.icon.data.attributes.title %></div>\n' +
         '                    <div class="card-body">\n' +
         '                        <h5 class="card-title"><%= attributes.title %></h5>\n' +
@@ -210,7 +210,18 @@ var PointViewCollection = Backbone.View.extend({
     initialize: function () {
         this.render();
     },
+    template: _.template('<form action="" role="form" class="form-horizontal">'+
+                '<div class="row form-group">'+
+                    '<input type="text" class="form-control col-md-9">'+
+                    '<div class="col-md-3">'+
+                        '<input type="submit" id = "searchId" class="btn btn-primary col" value="Search">'+
+                    '</div>'+
+                '</div>'+
+            '</form>'),
     render: function () {
+
+        this.$el.html(this.template());
+
         this.collection.each(function (point) {
             var pointView = new PointView({
                 model: point
@@ -225,33 +236,10 @@ var pointViewCollection = new PointViewCollection({
     collection: pointCollection
 });
 
-$('#main').prepend(pointViewCollection.el);
+$('#r1').prepend(pointViewCollection.el);
 
 
 function savePoint(form) {
-
-    // var dataSend = "{\n" +
-    //     "    \"data\": {\n" +
-    //     "        \"type\": \"Point\",\n" +
-    //     "        \"id\": \"4\",\n" +
-    //     "        \"attributes\": {\n" +
-    //     "            \"title\": \""+ form.titleId.value +"\",\n" +
-    //     "            \"description\": \"" + form.descriptionId.value +"\",\n" +
-    //     "            \"x\": \"" + form.coordinateXId.value +"\",\n" +
-    //     "            \"y\": \"" + form.coordinateYId.value +"\"\n" +
-    //     "        },\n" +
-    //     "        \"relationships\": {\n" +
-    //     "            \"icon\": {\n" +
-    //     "                \"data\": {\n" +
-    //     "                    \"type\": \"Icon\",\n" +
-    //     "                    \"id\": \""+ form.chooseIconId.value + "\"\n" +
-    //     "                }\n" +
-    //     "            }\n" +
-    //     "        }\n" +
-    //     "    }\n" +
-    //     "}";
-
-
 
     var dataSend = {
     "data": {
@@ -266,14 +254,9 @@ function savePoint(form) {
     }
 };
 
-
-
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '/api/points/', false);
     xhr.setRequestHeader('Content-Type', 'application/vnd.api+json');
     xhr.setRequestHeader('Authorization', 'Token d2ca14ecfd5a10dbb26296dccc4d510b0396fe3a');
-
     xhr.send(JSON.stringify(dataSend));
-debugger
-
 }

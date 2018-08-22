@@ -1,30 +1,14 @@
-var icons = [
-    {
-        "data": {
-            "type": "Icon",
-            "id": "2",
-            "attributes": {
-                "title": "titleIcon2",
-                "image": "/static/mainApp/img/education.png"
-            }
-        }
-    }, {
-        "data": {
-            "type": "Icon",
-            "id": "1",
-            "attributes": {
-                "title": "titleIcon1",
-                "image": "/static/mainApp/img/food.png"
-            }
-        }
-    }];
-
-
 var xhr = new XMLHttpRequest();
 xhr.open('GET', '/api/points/', false);
 xhr.send(null);
 
 points = JSON.parse(xhr.responseText)['data'];
+
+xhr = new XMLHttpRequest();
+xhr.open('GET', '/api/icons/', false);
+xhr.send(null);
+
+icons = JSON.parse(xhr.responseText)['data'];
 
 ///////////////////////////////////
 // Заполнение points картинками////
@@ -32,8 +16,8 @@ points = JSON.parse(xhr.responseText)['data'];
 {
     for (var i = 0; i < points.length; i++) {
         for (var j = 0; j < icons.length; j++) {
-            if (points[i].relationships.icon.data.id === icons[j].data.id) {
-                points[i].relationships.icon.data = icons[j].data;
+            if (points[i].relationships.icon.data.id === icons[j].id) {
+                points[i].relationships.icon.data = icons[j];
             }
         }
     }
@@ -261,3 +245,13 @@ function savePoint(form) {
     xhr.setRequestHeader('Authorization', 'Token d2ca14ecfd5a10dbb26296dccc4d510b0396fe3a');
     xhr.send(JSON.stringify(dataSend));
 }
+
+
+$('#chooseIconId').html(function () {
+    var options = '';
+    for (var i = 0; i < icons.length; i++) {
+        options += '<option value="' + icons[i].id + '">' + icons[i].attributes.title + '</option>';
+    }
+    console.log(options);
+    return options;
+});

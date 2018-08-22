@@ -39,9 +39,7 @@ points = JSON.parse(xhr.responseText)['data'];
     }
 }
 
-
 var collectIconsFuture = [];
-
 
 for (var i = 0; i < points.length; i++) {
 
@@ -63,6 +61,7 @@ for (var i = 0; i < points.length; i++) {
 
     collectIconsFuture[i] = iconFeature;
 }
+
 var vectorSource = new ol.source.Vector({
     features: collectIconsFuture
 });
@@ -71,11 +70,9 @@ var vectorLayer = new ol.layer.Vector({
     source: vectorSource
 });
 
-
 var rasterLayer = new ol.layer.Tile({
     source: new ol.source.OSM()
 });
-
 
 var map = new ol.Map({
     layers: [rasterLayer, vectorLayer],  // слои
@@ -86,12 +83,7 @@ var map = new ol.Map({
     })
 });
 
-// map.setLayerGroup(vectorLayer);
-
-////////////////////////////////////////////////////////////
-
 window.element = document.getElementById('popup');
-console.log(element)
 
 var popup = new ol.Overlay({
     element: element,
@@ -102,8 +94,8 @@ var popup = new ol.Overlay({
 
 map.addOverlay(popup);
 
-
 ////////////////////////!!!!!!!!!!!!!!!!!!!!!///////////
+
 map.on('click', function (evt) {
     var feature = map.forEachFeatureAtPixel(evt.pixel,
         function (feature) {
@@ -125,8 +117,8 @@ map.on('click', function (evt) {
         $(element).popover('dispose');
     }
 });
-////////////////////////!!!!!!!!!!!!!!!!!!!!!///////////
 
+////////////////////////!!!!!!!!!!!!!!!!!!!!!///////////
 
 map.on('pointermove', function (e) {
     if (e.dragging) {
@@ -137,7 +129,6 @@ map.on('pointermove', function (e) {
     var hit = map.hasFeatureAtPixel(pixel);
     map.getTarget().style.cursor = hit ? 'pointer' : '';
 });
-
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -158,22 +149,19 @@ pointCollection.add(points);
 
 var PointView = Backbone.View.extend({
 
-    initialize: function () {
-        this.model.on('destroy', this.render, this);
-    },
     className: 'rightInnerBlock',
     id: function () {
         return this.model.get('id');
     },
     template: _.template('<div class="row">\n' +
-        '                <div class="card text-white bg-info mb-3" style="width: 36rem;">\n' +
-        '                    <div class="card-header"><%= relationships.icon.data.attributes.title %></div>\n' +
-        '                    <div class="card-body">\n' +
-        '                        <h5 class="card-title"><%= attributes.title %></h5>\n' +
-        '                        <p class="card-text"><%= attributes.description %></p>\n' +
-        '                    </div>\n' +
-        '                </div>\n' +
-        '            </div> '),
+        '<div class="card text-white bg-info mb-3" style="width: 36rem;">\n' +
+        '<div class="card-header">X: <%= attributes.x %> Y: <%= attributes.y %></div>\n' +
+        '<div class="card-body">\n' +
+        '<h5 class="card-title"><%= attributes.title %></h5>\n' +
+        '<p class="card-text"><%= attributes.description %></p>\n' +
+        '</div>\n' +
+        '</div>\n' +
+        '</div> '),
     render: function () {
         this.$el.html(this.template(this.model.toJSON()));
         return this;
@@ -204,20 +192,35 @@ var PointView = Backbone.View.extend({
 });
 
 var PointViewCollection = Backbone.View.extend({
+
     tagName: 'div',
+
     id: 'rightBlockId',
 
     initialize: function () {
+        this.collection.on('change', this.render, this);
         this.render();
     },
-    template: _.template('<form action="" role="form" class="form-horizontal">'+
-                '<div class="row form-group">'+
-                    '<input type="text" class="form-control col-md-9">'+
-                    '<div class="col-md-3">'+
-                        '<input type="submit" id = "searchId" class="btn btn-primary col" value="Search">'+
-                    '</div>'+
-                '</div>'+
-            '</form>'),
+
+    template: _.template('<form action="" role="form" class="form-horizontal">' +
+        '<div class="row form-group">' +
+        '<input type="text" class="form-control col-md-9">' +
+        '<div class="col-md-3">' +
+        '<input type="button" id = "searchId" class="btn btn-primary col" value="Search">' +
+        '</div>' +
+        '</div>' +
+        '</form>'),
+
+    events: {
+        'click': 'searchAndRender'
+    },
+
+    searchAndRender: function () {
+        console.log(this.collection);
+        this.collection.model.destroy();
+        console.log(this.collection);
+    },
+
     render: function () {
 
         this.$el.html(this.template());
@@ -238,22 +241,20 @@ var pointViewCollection = new PointViewCollection({
 
 $('#r1').prepend(pointViewCollection.el);
 
-
 function savePoint(form) {
 
     var dataSend = {
-    "data": {
-        "type": "Point",
-        "attributes": {
-            "title": form.titleId.value,
-            "description": form.descriptionId.value,
-            "x": form.coordinateXId.value ,
-            "y": form.coordinateYId.value,
-            "icon": form.chooseIconId.value
+        "data": {
+            "type": "Point",
+            "attributes": {
+                "title": form.titleId.value,
+                "description": form.descriptionId.value,
+                "x": form.coordinateXId.value,
+                "y": form.coordinateYId.value,
+                "icon": form.chooseIconId.value
+            }
         }
-    }
-};
-
+    };
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '/api/points/', false);
     xhr.setRequestHeader('Content-Type', 'application/vnd.api+json');

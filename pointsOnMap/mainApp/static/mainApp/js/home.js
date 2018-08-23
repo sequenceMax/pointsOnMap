@@ -63,7 +63,7 @@ var map = new ol.Map({
     target: document.getElementById('map'),
     view: new ol.View({
         center: ol.proj.fromLonLat([39.710919, 47.240019]),
-        zoom: 14
+        zoom: 15
     })
 });
 
@@ -139,7 +139,9 @@ var PointView = Backbone.View.extend({
     },
     template: _.template('<div class="row">\n' +
         '<div class="card text-white bg-info mb-3" style="width: 36rem;">\n' +
-        '<div class="card-header">X: <%= attributes.x %> Y: <%= attributes.y %></div>\n' +
+        '<div class="card-header">X: <%= attributes.x %> Y: <%= attributes.y %> ' +
+        '<button type="button" class="btn btn-light btn-sm" style="float: right;">Изменить</button>' +
+        '<button type="button" class="btn btn-danger btn-sm" style="float: right;">Удалить</button></div>\n' +
         '<div class="card-body">\n' +
         '<h5 class="card-title"><%= attributes.title %></h5>\n' +
         '<p class="card-text"><%= attributes.description %></p>\n' +
@@ -159,7 +161,7 @@ var PointView = Backbone.View.extend({
         var map = this.model.get('map');
         map.setView(new ol.View({
             center: ol.proj.fromLonLat(coordinates),
-            zoom: 14
+            zoom: 15
         }));
 
 
@@ -182,7 +184,7 @@ var PointViewCollection = Backbone.View.extend({
     id: 'rightBlockId',
 
     initialize: function () {
-        this.collection.on('change', this.render, this);
+        //this.collection.on('change', this.render, this);
         this.render();
     },
 
@@ -196,13 +198,12 @@ var PointViewCollection = Backbone.View.extend({
         '</form>'),
 
     events: {
-        'click': 'searchAndRender'
+        'click .btn': 'searchAndRender'
     },
 
     searchAndRender: function () {
-        console.log(this.collection);
-        this.collection.model.destroy();
-        console.log(this.collection);
+        debugger;
+        console.log($('#popup'));
     },
 
     render: function () {

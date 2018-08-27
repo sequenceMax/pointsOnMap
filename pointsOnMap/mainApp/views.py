@@ -1,5 +1,6 @@
-
+from django.http import JsonResponse
 from django.shortcuts import render
+from rest_framework.response import Response
 from rest_framework import viewsets, permissions
 
 from mainApp.models import Point, Icon
@@ -15,12 +16,13 @@ class PointViewSet(viewsets.ModelViewSet):
     serializer_class = PointSerializer
     permission_classes = [permissions.AllowAny]
 
-    def get_queryset(self):
-        qs = super().get_queryset()
+    def list(self, request, *args, **kwargs):
+        queryset = Point.objects.all()
         description = self.request.query_params.get('description', None)
         if description:
-            qs = qs.filter(description=description)
-        return qs
+            queryset = queryset.filter(description__icontains=description)
+        serializer = PointSerializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class IconViewSet(viewsets.ModelViewSet):
@@ -32,7 +34,7 @@ class IconViewSet(viewsets.ModelViewSet):
         qs = super().get_queryset()
         title = self.request.query_params.get('title', None)
         if title:
-            qs = qs.filter(title=title)
+            qs = qs.filter(title__icontains=title)
         return qs
 
 

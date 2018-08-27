@@ -3,7 +3,6 @@ from django.db import models
 
 class Icon(models.Model):
     title = models.TextField()
-    # path = models.TextField()
     image = models.ImageField(upload_to='mainApp/icons/', default='')
 
     def __str__(self):

@@ -19,6 +19,8 @@
     <script src="{% static 'mainApp/js/libs/jQuery/jquery-3.3.1.min.js' %}"></script>
     <script src="{% static 'mainApp/js/libs/underscore/underscore.js' %}"></script>
     <script src="{% static 'mainApp/js/libs/backbone/backbone.js' %}"></script>
+    <script src="{% static 'mainApp/js/libs/backbone.marionette/backbone.radio.js' %}"></script>
+    <script src="{% static 'mainApp/js/libs/backbone.marionette/backbone.marionette.js' %}"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
             integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
@@ -29,6 +31,7 @@
 
     <script src="{% static 'mainApp/js/home.js' %}" defer></script>
 
+
 </head>
 <body>
 
@@ -36,51 +39,9 @@
 
     <div class="row" style="margin-top: 30px;">
         <div class="col"></div>
-        <div class="col-md-4">
-            <div id="map" class="map">
-                <div id="popup"></div>
-            </div>
-            <br/>
-            <form action=""  role="form" class="form-horizontal" onsubmit="savePoint(this)">
-                <div class="row form-group">
-                    <label for="titleId" class="col-form-label col-md-1">Title</label>
-                    <div class="col-md-11">
-                        <input type="text" class="form-control" id="titleId" placeholder="Enter Title">
-                    </div>
-                </div>
-
-                <div class="row form-group">
-                    <label for="descriptionId" class="col-form-label col-md-2">Description</label>
-                    <div class="col-md-10">
-                        <input type="text" class="form-control" id="descriptionId" placeholder="Enter Description">
-                    </div>
-                </div>
-                <div class="row form-group">
-                    <label for="coordinateXId" class="col-form-label col-md-1">X: </label>
-                    <div class="col-md-11">
-                        <input type="text" class="form-control" id="coordinateXId" placeholder="123.123456">
-                    </div>
-                </div>
-                <div class="row form-group">
-                    <label for="coordinateYId" class="col-form-label col-md-1">Y: </label>
-                    <div class="col-md-11">
-                        <input type="text" class="form-control" id="coordinateYId" placeholder="123.123456">
-                    </div>
-                </div>
-                <div class="row form-group">
-                    <label for="chooseIconId" class="col-form-label col-md-1">Icon</label>
-                    <div class="col-md-11">
-                        <select class="custom-select custom-select-md" id="chooseIconId">
-{#                            Options                                    #}
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <input type="submit" class="btn btn-success col-md-12" value="Save">
-                </div>
-            </form>
+        <div class="col-md-8">
+            <div id="mainRegion" class="container-fluid"></div>
         </div>
-        <div class="col-md-3" id="r1"></div>
         <div class="col"></div>
     </div>
 </div>

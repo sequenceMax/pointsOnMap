@@ -1,287 +1,4 @@
-// var xhr = new XMLHttpRequest();
-// xhr.open('GET', '/api/points/', false);
-// xhr.send(null);
-
-// var points = JSON.parse(xhr.responseText)['data'];
-//
-// var xhr = new XMLHttpRequest();
-// xhr.open('GET', '/api/icons/', false);
-// xhr.send(null);
-//
-// var icons = JSON.parse(xhr.responseText)['data'];
-//
-// ///////////////////////////////////
-// // Заполнение points картинками////
-// ///////////////////////////////////
-// {
-//     for (var i = 0; i < points.length; i++) {
-//         for (var j = 0; j < icons.length; j++) {
-//             if (points[i].relationships.icon.data.id === icons[j].id) {
-//                 points[i].relationships.icon.data = icons[j];
-//             }
-//         }
-//     }
-// }
-//
-// var collectIconsFuture = [];
-//
-// for (var i = 0; i < points.length; i++) {
-//
-//     var iconFeature = new ol.Feature({
-//         geometry: new ol.geom.Point(ol.proj.fromLonLat([+points[i].attributes.x, +points[i].attributes.y])),
-//         name: points[i].attributes.title,
-//     });
-//
-//     var iconPath = points[i].relationships.icon.data.attributes.image;
-//
-//     var iconStyle = new ol.style.Style({
-//         image: new ol.style.Icon(({
-//             anchor: [0, 0],
-//             src: iconPath
-//         }))
-//     });
-//
-//     iconFeature.setStyle(iconStyle);
-//
-//     collectIconsFuture[i] = iconFeature;
-// }
-//
-// var vectorSource = new ol.source.Vector({
-//     features: collectIconsFuture
-// });
-//
-// var vectorLayer = new ol.layer.Vector({
-//     source: vectorSource
-// });
-//
-// var rasterLayer = new ol.layer.Tile({
-//     source: new ol.source.OSM()
-// });
-//
-// var map = new ol.Map({
-//     layers: [rasterLayer, vectorLayer],  // слои
-//     target: document.getElementById('map'),
-//     view: new ol.View({
-//         center: ol.proj.fromLonLat([39.710919, 47.240019]),
-//         zoom: 15
-//     })
-// });
-//
-// window.element = document.getElementById('popup');
-//
-// var popup = new ol.Overlay({
-//     element: element,
-//     positioning: 'bottom-center',
-//     stopEvent: false,
-//     offset: [0, 0]
-// });
-//
-// map.addOverlay(popup);
-//
-// ////////////////////////!!!!!!!!!!!!!!!!!!!!!///////////
-//
-// map.on('click', function (evt) {
-//     var feature = map.forEachFeatureAtPixel(evt.pixel,
-//         function (feature) {
-//             return feature;
-//         });
-//
-//     if (feature) {
-//         var coordinates = feature.getGeometry().getCoordinates();
-//
-//         popup.setPosition(coordinates);
-//
-//         $(element).popover({
-//             placement: 'top',
-//             html: true,
-//             content: feature.get('name')
-//         });
-//         $(element).popover('show');
-//     } else {
-//         $(element).popover('dispose');
-//     }
-// });
-//
-// ////////////////////////!!!!!!!!!!!!!!!!!!!!!///////////
-//
-// map.on('pointermove', function (e) {
-//     if (e.dragging) {
-//         $(element).popover('dispose');
-//         return;
-//     }
-//     var pixel = map.getEventPixel(e.originalEvent);
-//     var hit = map.hasFeatureAtPixel(pixel);
-//     map.getTarget().style.cursor = hit ? 'pointer' : '';
-// });
-//
-// //////////////////////////////////////////////////////////////////////////////////////////////////////////
-//
-// var PointModel = Backbone.Model.extend({
-//     parse: function (obj) {
-//         return {
-//             'id': obj.id,
-//             'title': obj.attributes.title,
-//             'description': obj.attributes.description,
-//             'icon': obj.relationships.icon.data.id,
-//             'x': obj.attributes.x,
-//             'y': obj.attributes.y
-//         }
-//     }
-// });
-//
-// var PointCollection = Backbone.Collection.extend({
-//     model: PointModel,
-//     url: '/api/points/'
-// });
-//
-// var pointCollection = new PointCollection();
-//
-// var PointView = Backbone.View.extend({
-//
-//     className: 'rightInnerBlock',
-//
-//     id: function () {
-//         return this.model.get('id');
-//     },
-//     template: _.template('<div class="row">\n' +
-//         '<div class="card text-white bg-info mb-3" style="width: 36rem;">\n' +
-//         '<div class="card-header">X: <%= x %> Y: <%= y %> ' +
-//         '<button type="button" class="btn btn-light btn-sm" style="float: right;">Изменить</button>' +
-//         '<button type="button" class="btn btn-danger btn-sm" style="float: right;">Удалить</button></div>\n' +
-//         '<div class="card-body">\n' +
-//         '<h5 class="card-title"><%= title %></h5>\n' +
-//         '<p class="card-text"><%= description %></p>\n' +
-//         '</div>\n' +
-//         '</div>\n' +
-//         '</div> '),
-//
-//     render: function () {
-//         this.$el.html(this.template(this.model.toJSON()));
-//         return this;
-//     },
-//     // events: {
-//     //     'click': 'upToPoint'
-//     // },
-//     // upToPoint: function () {
-//     //
-//     //     var coordinates = [+this.model.get('attributes').x, +this.model.get('attributes').y];
-//     //     var map = this.model.get('map');
-//     //     map.setView(new ol.View({
-//     //         center: ol.proj.fromLonLat(coordinates),
-//     //         zoom: 15
-//     //     }));
-//     //
-//     //     var popup = this.model.get('popup');
-//     //     popup.setPosition(ol.proj.fromLonLat(coordinates));
-//     //
-//     //     $(element).popover({
-//     //         placement: 'top',
-//     //         html: true,
-//     //         content: this.model.get('attributes').title
-//     //     });
-//     //     $(element).popover('show');
-//     // }
-// });
-//
-// var PointViewCollection = Backbone.View.extend({
-//     id: 'rightBlockId',
-//
-//     template: _.template('<form action="" role="form" class="form-horizontal">' +
-//         '<div class="row form-group">' +
-//         '<input type="text" class="form-control col-md-9">' +
-//         '<div class="col-md-3">' +
-//         '<input type="button" id = "searchId" class="btn btn-primary col" value="Search">' +
-//         '</div>' +
-//         '</div>' +
-//         '</form><div class ="list"></div>'),
-//
-//     // events: {
-//     //     'click #searchId': 'searchAndRender'
-//     // },
-//
-//     // searchAndRender: function () {
-//     //     // console.log($('#popup'));
-//     // },
-//
-//     region: {
-//         list: '.list'
-//     },
-//
-//     onRender: function () {
-//         var _this = this;
-//         this.collection.on('change', this.render, this);
-//         this.collection.parse = function (data) {
-//             return data.data;
-//         };
-//         this.collection.fetch({
-//             success: function () {
-//                 _this.showChildView('firstRegion', new SubView({collection: _this.collection}));
-//             }
-//         });
-//
-//         this.$el.html(this.template());
-//
-//         debugger;
-//         var test = this.collection.length;
-//
-//         console.log(this.collection.length);
-//
-//         for (var i = 0; i < test.length; i++) {
-//
-//         }
-//
-//
-//         // this.collection.each(function (point) {
-//         //     console.log(point);
-//         //     var pointView = new PointView({
-//         //         model: point
-//         //     });
-//         //     this.$el.append(pointView.render().el);
-//         // }, this);
-//     }
-// });
-//
-// var pointViewCollection = new PointViewCollection({
-//     collection: pointCollection
-// });
-//
-//
-// $('#r1').prepend(pointViewCollection.el);
-//
-// // function savePoint(form) {
-// //
-// //     var dataSend = {
-// //         "data": {
-// //             "type": "Point",
-// //             "attributes": {
-// //                 "title": form.titleId.value,
-// //                 "description": form.descriptionId.value,
-// //                 "x": form.coordinateXId.value,
-// //                 "y": form.coordinateYId.value,
-// //                 "icon": form.chooseIconId.value
-// //             }
-// //         }
-// //     };
-// //     var xhr = new XMLHttpRequest();
-// //     xhr.open('POST', '/api/points/', false);
-// //     xhr.setRequestHeader('Content-Type', 'application/vnd.api+json');
-// //     xhr.setRequestHeader('Authorization', 'Token d2ca14ecfd5a10dbb26296dccc4d510b0396fe3a');
-// //     xhr.send(JSON.stringify(dataSend));
-// // }
-// //
-// //
-// // $('#chooseIconId').html(function () {
-// //     var options = '';
-// //     for (var i = 0; i < icons.length; i++) {
-// //         options += '<option value="' + icons[i].id + '">' + icons[i].attributes.title + '</option>';
-// //     }
-// //     console.log(options);
-// //     return options;
-// // });
-//
-//
-// //////////////////////////////////////////////////////////////////////////////
-// //////////////////////////////////////////////////////////////////////////////
+/ //////////////////////////////////////////////////////////////////////////////
 //
 // var PointsModel = Backbone.Model.extend({
 //     urlRoot: 'api'
@@ -373,23 +90,7 @@
 //
 // new App().start();
 
-//////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
-
-var rasterLayer = new ol.layer.Tile({
-    source: new ol.source.OSM()
-});
-
-window.map = new ol.Map({
-    layers: [rasterLayer],
-    view: new ol.View({
-        center: ol.proj.fromLonLat([39.710919, 47.240019]),
-        zoom: 15
-    })
-});
-
-
-/////////////////// Templates
+/////////////////// Templates ///////////////////
 
 var mapTemplate = _.template(
     '<div id="popup"></div>\n'
@@ -423,19 +124,17 @@ var formTemplate = _.template(
     '</div>\n' +
     '<div class="row form-group">\n' +
     '<label for="chooseIconId" class="col-form-label col-md-1">Icon</label>\n' +
-    '<div class="col-md-11">\n' +
-    '<select class="custom-select custom-select-md" id="chooseIconId">\n' +
-    '</select>\n' +
+    '<div class="col-md-11" id="innerSelect">\n' +
     '</div>\n' +
     '</div>\n' +
     '<div class="form-group">\n' +
-    '<input type="button" class="btn btn-success col-md-12" value="Save">\n' +
+    '<input type="button" id="saveModelId" class="btn btn-success col-md-12" value="Save">\n' +
     '</div>\n' +
     '</form>\n');
 
 var searchTempalte = _.template(
     '<div class="row form-group">' +
-    '<input type="text" class="form-control col-md-9">' +
+    '<input type="text" class="form-control col-md-9" id="searchValue">' +
     '<div class="col-md-3">' +
     '<input type="button" id = "searchId" class="btn btn-primary col" value="Search">' +
     '</div>' +
@@ -443,7 +142,6 @@ var searchTempalte = _.template(
 
 var pageTemplate = _.template(
     '<div class="col-md-7">\n' +
-    '<div id ="mapRegion"></div>\n' + //// Вставка карты
     '<br/>\n' +
     '<div id="formRegion"></div>' +
     '</div>' +
@@ -454,10 +152,12 @@ var pageTemplate = _.template(
     '</div>');
 
 var pointChildViewTemplate = _.template('<div class="row">\n' +
-    '<div class="card text-white bg-info mb-3" style="width: 32em;">\n' +
+    '<div class="card text-white bg-info mb-3" style="width: 27.5em;">\n' +
     '<div class="card-header">X: <%= x %> Y: <%= y %> ' +
-    '<button type="button" class="btn btn-light btn-sm" style="float: right;">Изменить</button>' +
-    '<button type="button" class="btn btn-danger btn-sm" style="float: right;">Удалить</button></div>\n' +
+    '<div style="float: right;">' +
+    '<button type="button" class="btn btn-light btn-sm" style="float: left;" id="changeView">Change</button>\n' +
+    '<button type="button" class="btn btn-danger btn-sm" style="float: right;" id="deleteView">Delete</button></div>\n' +
+    '</div>' +
     '<div class="card-body">\n' +
     '<h5 class="card-title"><%= title %></h5>\n' +
     '<p class="card-text"><%= description %></p>\n' +
@@ -465,8 +165,10 @@ var pointChildViewTemplate = _.template('<div class="row">\n' +
     '</div>\n' +
     '</div>');
 
+var IconChildViewTemplate = _.template('<%= title %>');
+
 ///////////////////
-//////////////////////////// models
+///////////////////  Models ///////////////////
 
 var PointModel = Backbone.Model.extend({
     parse: function (obj) {
@@ -474,9 +176,7 @@ var PointModel = Backbone.Model.extend({
             'id': obj.id,
             'title': obj.attributes.title,
             'description': obj.attributes.description,
-            'icon': {
-                'id': obj.relationships.icon.data.id,
-            },
+            'icon': obj.relationships.icon.data.id,
             'x': obj.attributes.x,
             'y': obj.attributes.y
         }
@@ -487,12 +187,14 @@ var IconModel = Backbone.Model.extend({
     parse: function (obj) {
         return {
             'id': obj.id,
+            'title': obj.attributes.title,
             'image': obj.attributes.image
         }
     }
 });
 
-////////////////////////////
+///////////////////
+/////////////////// Collections ///////////////////
 
 var PointCollection = Backbone.Collection.extend({
     model: PointModel,
@@ -504,20 +206,17 @@ var IconCollection = Backbone.Collection.extend({
     url: '/api/icons/',
 });
 
+///////////////////
 
 var MapView = Mn.View.extend({
-    tagName: 'div',
 
-    id: 'map',
-
-    className: 'map',
-
-    initialize(collectionPoint, collectionIcon) {
+    initialize: function (collectionPoint, collectionIcon) {
         this.collectionPoint = collectionPoint;
         this.collectionIcon = collectionIcon;
+        this.test();
     },
 
-    onRender() {
+    test : function(){
         var _this = this;
 
         var collectIconsFuture = [];
@@ -527,7 +226,7 @@ var MapView = Mn.View.extend({
 
             _this.collectionIcon.each(function (icon) {
 
-                if (point.get('icon').id === icon.get('id')) {
+                if (point.get('icon') === icon.get('id')) {
 
                     var iconFeature = new ol.Feature({
                         geometry: new ol.geom.Point(ol.proj.fromLonLat([
@@ -545,7 +244,6 @@ var MapView = Mn.View.extend({
                     iconFeature.setStyle(iconStyle);
 
                     collectIconsFuture[count++] = iconFeature;
-
                 }
             })
         });
@@ -558,11 +256,12 @@ var MapView = Mn.View.extend({
             source: vectorSource
         });
 
-        window.map.addLayer(vectorLayer);
-        window.map.setTarget(this.$el[0]);
-    },
+        if (window.map.getLayers().getLength() > 1) {
+            window.map.getLayers().removeAt(1);
+        }
 
-    template: mapTemplate,
+        window.map.addLayer(vectorLayer);
+    },
 });
 
 var FormView = Mn.View.extend({
@@ -575,11 +274,63 @@ var FormView = Mn.View.extend({
     },
 
     template: formTemplate,
+
+    initialize: function (collectionIcon) {
+        this.collectionIcon = collectionIcon;
+    },
+
+    regions: {
+        'innerSelect' : '#innerSelect'
+    },
+
+    ui: {
+        'saveModel' : '#saveModelId',
+    },
+
+    triggers: {
+        'click @ui.saveModel': 'saveModel:click'
+    },
+
+    onRender(){
+        this.showChildView('innerSelect', new IconList(this.collectionIcon));
+    },
+});
+
+var IconChildView = Mn.View.extend({
+
+    tagName: 'option',
+    attributes: {
+        'value': function () {
+            return IconChildView.arguments['0'].model.attributes.id;
+        },
+    },
+    template: IconChildViewTemplate,
+});
+
+var IconList = Mn.CollectionView.extend({
+    tagName:'select',
+    className: 'custom-select custom-select-md',
+    id: 'chooseIconId',
+    template: false,
+
+    childView: IconChildView,
+
+    initialize: function (collectionIcon) {
+        this.collection = collectionIcon;
+    },
 });
 
 var SearchView = Mn.View.extend({
     className: 'col',
     template: searchTempalte,
+
+    ui: {
+        'searchBtn': '#searchId'
+    },
+
+    triggers: {
+        'click @ui.searchBtn': 'search:click'
+    },
 });
 
 var PointChildView = Mn.View.extend({
@@ -606,15 +357,24 @@ var PageView = Mn.View.extend({
     template: pageTemplate,
 
     regions: {
-        'mapRegion': '#mapRegion',
         'formRegion': '#formRegion',
         'searchRegion': '#searchRegion',
         'listRegion': '#listRegion',
     },
 
+    childViewEvents: {
+        'search:click': 'searchClick',
+        'saveModel:click': 'saveModel',
+    },
+
+    saveModel: function(){
+        var model = new PointModel({
+            'title' : $('')
+        });
+    },
+
     onRender() {
         this.collectionPoint = new PointCollection();
-        this.collectionPoint.on('change', this.render, this);
         this.collectionPoint.parse = function (data) {
             return data.data;
         };
@@ -625,26 +385,54 @@ var PageView = Mn.View.extend({
             return data.data;
         };
 
+        this.collectionUpdate();
+        this.showChildView('searchRegion', new SearchView());
+    },
+
+    searchClick: function (view, event) {
+        this.collectionUpdate('?description=' + $('#searchValue').val());
+    },
+
+    collectionUpdate: function (attr) {
         var _this = this;
+
+        if (attr !== undefined) {
+            this.collectionPoint.url = '/api/points/' + attr;
+        }
+
         this.collectionPoint.fetch({
+            reset: true,
             success: function () {
                 _this.collectionIcon.fetch({
+                    reset: true,
                     success: function () {
                         _this.showChildView('listRegion', new ListView(_this.collectionPoint));
-                        _this.showChildView('mapRegion', new MapView(_this.collectionPoint, _this.collectionIcon));
+                        new MapView(_this.collectionPoint, _this.collectionIcon);
+                        _this.showChildView('formRegion', new FormView(_this.collectionIcon))
                     }
                 });
             }
         });
-        var formView = new FormView();
-        var searchView = new SearchView();
-        this.showChildView('formRegion', formView);
-        this.showChildView('searchRegion', searchView);
-    },
+        }
 });
 
 var App = Mn.Application.extend({
     region: '#mainRegion',
+
+     onBeforeStart() {
+        var rasterLayer = new ol.layer.Tile({
+            source: new ol.source.OSM()
+        });
+
+        window.map = new ol.Map({
+            layers: [rasterLayer],
+            target: document.getElementById('map'),
+            view: new ol.View({
+                center: ol.proj.fromLonLat([39.710919, 47.240019]),
+                zoom: 15
+            })
+        });
+    },
     onStart() {
         this.showView(new PageView());
     },
@@ -653,45 +441,6 @@ var App = Mn.Application.extend({
 new App().start();
 
 
-//     var iconFeature = new ol.Feature({
-//         geometry: new ol.geom.Point(ol.proj.fromLonLat([+points[i].attributes.x, +points[i].attributes.y])),
-//         name: points[i].attributes.title,
-//     });
-
-
-//
-//     var iconStyle = new ol.style.Style({
-//         image: new ol.style.Icon(({
-//             anchor: [0, 0],
-//             src: iconPath
-//         }))
-//     });
-//
-//     iconFeature.setStyle(iconStyle);
-//
-//     collectIconsFuture[i] = iconFeature;
-// }
-//
-// var vectorSource = new ol.source.Vector({
-//     features: collectIconsFuture
-// });
-//
-// var vectorLayer = new ol.layer.Vector({
-//     source: vectorSource
-// });
-//
-// var rasterLayer = new ol.layer.Tile({
-//     source: new ol.source.OSM()
-// });
-//
-// var map = new ol.Map({
-//     layers: [rasterLayer, vectorLayer],  // слои
-//     target: document.getElementById('map'),
-//     view: new ol.View({
-//         center: ol.proj.fromLonLat([39.710919, 47.240019]),
-//         zoom: 15
-//     })
-// });
 //
 // window.element = document.getElementById('popup');
 //

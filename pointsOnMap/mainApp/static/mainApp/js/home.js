@@ -1,95 +1,3 @@
-/ //////////////////////////////////////////////////////////////////////////////
-//
-// var PointsModel = Backbone.Model.extend({
-//     urlRoot: 'api'
-// });
-//
-// var Result = Mn.View.extend({
-//
-//     className: 'col',
-//
-//     template: _.template('<span><%= count %></span>'),
-//
-//     initialize(ops) {
-//
-//         this.count = ops.count || 0;
-//     },
-//
-//     templateContext() {
-//         return {
-//             count: this.count
-//         }
-//     },
-// });
-//
-// var Btn = Mn.View.extend({
-//
-//     tagName: 'button',
-//
-//     className: 'btn btn-primary',
-//
-//     template: _.template('Click'),
-//
-//     triggers: {
-//         'click': 'button:click'
-//     },
-//
-//     onButtonClick(view, event) {
-//
-//     },
-// });
-//
-// var pointTemplate = _.template('<div id="huiId">hui</div><div id="qew"></div>');
-//
-// var Points = Mn.View.extend({
-//
-//     initialize() {
-//         this.count = 0;
-//     },
-//
-//     template: pointTemplate,
-//
-//     regions: {
-//         'btnRegion': '#qew',
-//         'resultRegion': '#huiId'
-//     },
-//
-//     childViewEvents: {
-//         'button:click': 'onClick'
-//     },
-//
-//     renderResult(count) {
-//         this.showChildView('resultRegion', new Result({count: count}));
-//     },
-//
-//     onClick(view, event) {
-//         this.count += 1;
-//         this.renderResult(this.count);
-//     },
-//
-//     onRender() {
-//         var btn = new Btn();
-//         this.showChildView('btnRegion', btn);
-//         this.renderResult(this.count);
-//     }
-// });
-//
-// var App = Mn.Application.extend({
-//
-//     onBeforeStart() {
-//
-//     },
-//
-//     region: 'body',
-//
-//     onStart() {
-//         console.log(11)
-//         this.showView(new Points())
-//     },
-// });
-//
-// new App().start();
-
 /////////////////// Templates ///////////////////
 
 var mapTemplate = _.template(
@@ -155,8 +63,8 @@ var pointChildViewTemplate = _.template('<div class="row">\n' +
     '<div class="card text-white bg-info mb-3" style="width: 27.5em;">\n' +
     '<div class="card-header">X: <%= x %> Y: <%= y %> ' +
     '<div style="float: right;">' +
-    '<button type="button" class="btn btn-light btn-sm" style="float: left;" id="changeView">Change</button>\n' +
-    '<button type="button" class="btn btn-danger btn-sm" style="float: right;" id="deleteView">Delete</button></div>\n' +
+    '<input type="button" class="btn btn-light btn-sm" style="float: left;" id="changeView" value="Change">\n' +
+    '<input type="button" class="btn btn-danger btn-sm" style="float: right;" id="deleteView" value="Delete"></div>\n' +
     '</div>' +
     '<div class="card-body">\n' +
     '<h5 class="card-title"><%= title %></h5>\n' +
@@ -171,15 +79,29 @@ var IconChildViewTemplate = _.template('<%= title %>');
 ///////////////////  Models ///////////////////
 
 var PointModel = Backbone.Model.extend({
+    url: '/api/points/',
     parse: function (obj) {
-        return {
-            'id': obj.id,
-            'title': obj.attributes.title,
-            'description': obj.attributes.description,
-            'icon': obj.relationships.icon.data.id,
-            'x': obj.attributes.x,
-            'y': obj.attributes.y
+        if (obj.data === undefined) {
+            return {
+                'id': obj.id,
+                'title': obj.attributes.title,
+                'description': obj.attributes.description,
+                'icon': obj.relationships.icon.data.id,
+                'x': obj.attributes.x,
+                'y': obj.attributes.y
+            }
         }
+
+        return {
+            'id': obj.data.id,
+            'title': obj.data.attributes.title,
+            'description': obj.data.attributes.description,
+            'icon': obj.data.relationships.icon.data.id,
+            'x': obj.data.attributes.x,
+            'y': obj.data.attributes.y
+        }
+
+
     }
 });
 
@@ -216,7 +138,7 @@ var MapView = Mn.View.extend({
         this.test();
     },
 
-    test : function(){
+    test: function () {
         var _this = this;
 
         var collectIconsFuture = [];
@@ -280,18 +202,18 @@ var FormView = Mn.View.extend({
     },
 
     regions: {
-        'innerSelect' : '#innerSelect'
+        'innerSelect': '#innerSelect'
     },
 
     ui: {
-        'saveModel' : '#saveModelId',
+        'saveModel': '#saveModelId',
     },
 
     triggers: {
         'click @ui.saveModel': 'saveModel:click'
     },
 
-    onRender(){
+    onRender() {
         this.showChildView('innerSelect', new IconList(this.collectionIcon));
     },
 });
@@ -308,7 +230,7 @@ var IconChildView = Mn.View.extend({
 });
 
 var IconList = Mn.CollectionView.extend({
-    tagName:'select',
+    tagName: 'select',
     className: 'custom-select custom-select-md',
     id: 'chooseIconId',
     template: false,
@@ -336,6 +258,14 @@ var SearchView = Mn.View.extend({
 var PointChildView = Mn.View.extend({
     className: 'col',
     template: pointChildViewTemplate,
+
+    ui: {
+        'deletePoint': '#deleteView'
+    },
+
+    triggers: {
+        'click @ui.deletePoint': 'delete:click'
+    },
 });
 
 var ListView = Mn.CollectionView.extend({
@@ -365,15 +295,47 @@ var PageView = Mn.View.extend({
     childViewEvents: {
         'search:click': 'searchClick',
         'saveModel:click': 'saveModel',
+        'delete:click': 'destroyPoint',
     },
 
-    saveModel: function(){
+    modelEvents: {
+        'sync': 'collectionUpdate'
+    },
+
+    saveModel: function () {
+
         var model = new PointModel({
-            'title' : $('')
+            "data": {
+                'type': 'Point',
+                'attributes': {
+                    'title': $('#titleId').val(),
+                    'description': $('#descriptionId').val(),
+                    'x': $('#coordinateXId').val(),
+                    'y': $('#coordinateYId').val(),
+                    'icon': $('#chooseIconId').val(),
+                }
+            }
         });
+
+        model.save(
+            null, {
+                headers: {
+                    'Content-Type': 'application/vnd.api+json',
+                    'Authorization': 'Token d2ca14ecfd5a10dbb26296dccc4d510b0396fe3a'
+                }
+            }
+        );
+
+        this.collectionPoint.unshift(model);
+        this.collectionUpdate();
+    },
+
+    destroyPoint: function () {
+        console.log(111)
     },
 
     onRender() {
+
         this.collectionPoint = new PointCollection();
         this.collectionPoint.parse = function (data) {
             return data.data;
@@ -389,11 +351,12 @@ var PageView = Mn.View.extend({
         this.showChildView('searchRegion', new SearchView());
     },
 
-    searchClick: function (view, event) {
+    searchClick: function () {
         this.collectionUpdate('?description=' + $('#searchValue').val());
     },
 
     collectionUpdate: function (attr) {
+
         var _this = this;
 
         if (attr !== undefined) {
@@ -408,18 +371,24 @@ var PageView = Mn.View.extend({
                     success: function () {
                         _this.showChildView('listRegion', new ListView(_this.collectionPoint));
                         new MapView(_this.collectionPoint, _this.collectionIcon);
-                        _this.showChildView('formRegion', new FormView(_this.collectionIcon))
+                        _this.showChildView('formRegion', new FormView(_this.collectionIcon));
+                    },
+                    error: function (e) {
+                        alert('Ошибка заполнения иконок \n' + e)
                     }
                 });
+            },
+            error: function (e) {
+                alert('Ошибка заполнения точек \n' + e)
             }
         });
-        }
+    }
 });
 
 var App = Mn.Application.extend({
     region: '#mainRegion',
 
-     onBeforeStart() {
+    onBeforeStart() {
         var rasterLayer = new ol.layer.Tile({
             source: new ol.source.OSM()
         });

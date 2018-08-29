@@ -63,7 +63,7 @@ var pointChildViewTemplate = _.template('<div class="row">\n' +
     '<div class="card text-white bg-info mb-3" style="width: 27.5em;">\n' +
     '<div class="card-header">X: <%= x %> Y: <%= y %> ' +
     '<div style="float: right;">' +
-    '<input type="button" class="btn btn-light btn-sm" style="float: left;" id="changeView" value="Change">\n' +
+    '<input type="button" class="btn btn-light btn-sm" style="float: left;" id="changeView" value="Change" >\n' +
     '<input type="button" class="btn btn-danger btn-sm" style="float: right;" id="deleteView" value="Delete"></div>\n' +
     '</div>' +
     '<div class="card-body">\n' +
@@ -79,7 +79,9 @@ var IconChildViewTemplate = _.template('<%= title %>');
 ///////////////////  Models ///////////////////
 
 var PointModel = Backbone.Model.extend({
-    urlRoot: '/api/points/',
+    urlRoot: function () {
+        return '/api/points';
+    },
     parse: function (obj) {
         if (obj.data === undefined) {
             return {
@@ -118,14 +120,16 @@ var IconModel = Backbone.Model.extend({
 ///////////////////
 /////////////////// Collections ///////////////////
 
+///////////////////////////////////////////////////////////   params.url = _.result(model, 'url') + '/' || urlError();   в исходниках добавлен слеш
+
 var PointCollection = Backbone.Collection.extend({
     model: PointModel,
-    url: '/api/points/',
+    url: '/api/points',
 });
 
 var IconCollection = Backbone.Collection.extend({
     model: IconModel,
-    url: '/api/icons/',
+    url: '/api/icons',
 });
 
 ///////////////////
@@ -214,7 +218,7 @@ var FormView = Mn.View.extend({
     },
 
     onRender() {
-        this.showChildView('innerSelect', new IconList(this.collectionIcon));
+        this.showChildView('innerSelect', new IconList({collection: this.collectionIcon}));
     },
 });
 
@@ -234,12 +238,8 @@ var IconList = Mn.CollectionView.extend({
     className: 'custom-select custom-select-md',
     id: 'chooseIconId',
     template: false,
-
     childView: IconChildView,
 
-    initialize: function (collectionIcon) {
-        this.collection = collectionIcon;
-    },
 });
 
 var SearchView = Mn.View.extend({
@@ -257,19 +257,75 @@ var SearchView = Mn.View.extend({
 
 var PointChildView = Mn.View.extend({
 
-    initialize: function () {
-        this.model.on('test', this.remove, this);
+    initialize() {
+        this.check = false;
     },
+
     className: 'col',
     template: pointChildViewTemplate,
 
     ui: {
-        'deletePoint': '#deleteView'
+        'deletePoint': '#deleteView',
+        'changePoint': '#changeView',
     },
 
-    triggers: {
-        'click @ui.deletePoint': 'delete:click'
+    events: {
+        'click @ui.deletePoint': '_delete',
+        'click @ui.changePoint': '_change',
     },
+
+    _change: function () {
+        var _this = this;
+        if (this.check) {
+            var attrib = {
+                data: {
+                    'type': 'Point',
+                    'id': this.model.id,
+                    'attributes': {
+                        'title': $('#titleId').val(),
+                        'description': $('#descriptionId').val(),
+                        'x': $('#coordinateXId').val(),
+                        'y': $('#coordinateYId').val(),
+                        'icon': $('#chooseIconId').val(),
+                    }
+                }
+            };
+            this.model.save(attrib, {
+                at: _this.model.id,
+                success: function (model) {
+                    _this.check = false;
+                    _this.model.collection.add(model);
+                    $('.btn').prop('disabled', false);
+                },
+                headers: {
+                    'Content-Type': 'application/vnd.api+json',
+                    'Authorization': 'Token d2ca14ecfd5a10dbb26296dccc4d510b0396fe3a'
+                }
+            });
+        } else {
+            $('#titleId').val(this.model.get('title'));
+            $('#descriptionId').val(this.model.get('description'));
+            $('#coordinateXId').val(this.model.get('x'));
+            $('#coordinateYId').val(this.model.get('y'));
+            $('#chooseIconId').val(this.model.get('icon'));
+
+
+            $('.btn').prop('disabled', true);
+            $('#changeView').prop('disabled', false);
+
+
+            this.check = true;
+        }
+    },
+
+    _delete: function () {
+        this.model.destroy({
+            headers: {
+                'Authorization': 'Token d2ca14ecfd5a10dbb26296dccc4d510b0396fe3a'
+            }
+        })
+    },
+
 });
 
 var ListView = Mn.CollectionView.extend({
@@ -277,33 +333,7 @@ var ListView = Mn.CollectionView.extend({
 
     childView: PointChildView,
 
-    childViewEvents: {
-        'delete:click': 'deletePoint'
-    },
-
-    triggers: {
-        'deletePoint': 'deletePoint:click',
-    },
-
-    deletePoint: function (view, event) {
-        this.collection.remove(view.model);
-
-        view.model.destroy({
-            wait: true,
-            headers: {
-                'Authorization': 'Token d2ca14ecfd5a10dbb26296dccc4d510b0396fe3a'
-            }
-        });
-
-    },
-
-    initialize: function (collection) {
-        this.collection = collection;
-    },
 });
-
-var behaviourUpdateView = Mn.Behavior.extend();
-
 
 var PageView = Mn.View.extend({
 
@@ -322,11 +352,6 @@ var PageView = Mn.View.extend({
     childViewEvents: {
         'search:click': 'searchClick',
         'saveModel:click': 'saveModel',
-        'deletePoint:click': 'destroyPoint',
-    },
-
-    destroyPoint: function () {
-        console.log(111111)
     },
 
     modelEvents: {
@@ -334,7 +359,7 @@ var PageView = Mn.View.extend({
     },
 
     saveModel: function () {
-
+        var _this = this;
         var model = new PointModel({
             "data": {
                 'type': 'Point',
@@ -353,17 +378,17 @@ var PageView = Mn.View.extend({
                 headers: {
                     'Content-Type': 'application/vnd.api+json',
                     'Authorization': 'Token d2ca14ecfd5a10dbb26296dccc4d510b0396fe3a'
+                },
+                success: function (model) {
+                    _this.collectionPoint.push(model);
                 }
             }
-        );
-
-        this.collectionPoint.unshift(model);
-        this.collectionUpdate();
+        )
     },
 
     onRender() {
 
-        this.collectionPoint = new PointCollection();
+        this.collectionPoint = new PointCollection({model: PointModel});
         this.collectionPoint.parse = function (data) {
             return data.data;
         };
@@ -378,16 +403,21 @@ var PageView = Mn.View.extend({
     },
 
     searchClick: function () {
-        this.collectionUpdate('?description=' + $('#searchValue').val());
+        var _this = this;
+        this.collectionPoint.url = '/api/points/?description=' + $('#searchValue').val();
+        this.collectionPoint.fetch({
+            success: function () {
+                console.log(_this.collectionPoint)
+            },
+            error: function (e) {
+                alert('Pizdec')
+            }
+        });
     },
 
-    collectionUpdate: function (attr) {
+    collectionUpdate: function () {
 
         var _this = this;
-
-        if (attr !== undefined) {
-            this.collectionPoint.url = '/api/points/' + attr;
-        }
 
         this.collectionPoint.fetch({
             reset: true,
@@ -395,7 +425,8 @@ var PageView = Mn.View.extend({
                 _this.collectionIcon.fetch({
                     reset: true,
                     success: function () {
-                        _this.showChildView('listRegion', new ListView(_this.collectionPoint));
+                        window.poinstColl = _this.collectionPoint;
+                        _this.showChildView('listRegion', new ListView({collection: _this.collectionPoint}));
                         new MapView(_this.collectionPoint, _this.collectionIcon);
                         _this.showChildView('formRegion', new FormView(_this.collectionIcon));
                     },

@@ -79,7 +79,7 @@ var IconChildViewTemplate = _.template('<%= title %>');
 ///////////////////  Models ///////////////////
 
 var PointModel = Backbone.Model.extend({
-    url: '/api/points/',
+    urlRoot: '/api/points/',
     parse: function (obj) {
         if (obj.data === undefined) {
             return {
@@ -130,7 +130,7 @@ var IconCollection = Backbone.Collection.extend({
 
 ///////////////////
 
-var MapView = Mn.View.extend({
+var MapView = Mn.MnObject.extend({
 
     initialize: function (collectionPoint, collectionIcon) {
         this.collectionPoint = collectionPoint;
@@ -256,6 +256,10 @@ var SearchView = Mn.View.extend({
 });
 
 var PointChildView = Mn.View.extend({
+
+    initialize: function () {
+        this.model.on('test', this.remove, this);
+    },
     className: 'col',
     template: pointChildViewTemplate,
 
@@ -273,10 +277,33 @@ var ListView = Mn.CollectionView.extend({
 
     childView: PointChildView,
 
+    childViewEvents: {
+        'delete:click': 'deletePoint'
+    },
+
+    triggers: {
+        'deletePoint': 'deletePoint:click',
+    },
+
+    deletePoint: function (view, event) {
+        this.collection.remove(view.model);
+
+        view.model.destroy({
+            wait: true,
+            headers: {
+                'Authorization': 'Token d2ca14ecfd5a10dbb26296dccc4d510b0396fe3a'
+            }
+        });
+
+    },
+
     initialize: function (collection) {
         this.collection = collection;
     },
 });
+
+var behaviourUpdateView = Mn.Behavior.extend();
+
 
 var PageView = Mn.View.extend({
 
@@ -295,7 +322,11 @@ var PageView = Mn.View.extend({
     childViewEvents: {
         'search:click': 'searchClick',
         'saveModel:click': 'saveModel',
-        'delete:click': 'destroyPoint',
+        'deletePoint:click': 'destroyPoint',
+    },
+
+    destroyPoint: function () {
+        console.log(111111)
     },
 
     modelEvents: {
@@ -330,10 +361,6 @@ var PageView = Mn.View.extend({
         this.collectionUpdate();
     },
 
-    destroyPoint: function () {
-        console.log(111)
-    },
-
     onRender() {
 
         this.collectionPoint = new PointCollection();
@@ -342,7 +369,6 @@ var PageView = Mn.View.extend({
         };
 
         this.collectionIcon = new IconCollection();
-        this.collectionIcon.on('change', this.render, this);
         this.collectionIcon.parse = function (data) {
             return data.data;
         };
@@ -421,3 +447,5 @@ new App().start();
 // });
 //
 // map.addOverlay(popup);
+
+

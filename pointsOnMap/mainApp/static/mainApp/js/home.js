@@ -138,12 +138,13 @@ var MapView = Mn.MnObject.extend({
 
     initialize: function (collectionPoint, collectionIcon) {
         this.collectionIcon = collectionIcon;
-        this.test(collectionPoint);
+        this.collectionPoint = collectionPoint;
+
+        this.test();
     },
 
-    test: function (collectionPoint) {
+    test: function () {
 
-        this.collectionPoint = collectionPoint;
         var _this = this;
 
         var collectIconsFuture = [];
@@ -240,7 +241,6 @@ var IconList = Mn.CollectionView.extend({
     id: 'chooseIconId',
     template: false,
     childView: IconChildView,
-
 });
 
 var SearchView = Mn.View.extend({
@@ -303,7 +303,7 @@ var PointChildView = Mn.View.extend({
                     _this.render();
 
                     $('.btn').prop('disabled', false);
-                    _this.mapUpdateLayer.test(_this.model.collection);
+                    _this.mapUpdateLayer.test();
                     _this.check = false;
 
                 },
@@ -327,11 +327,12 @@ var PointChildView = Mn.View.extend({
     },
 
     _delete: function () {
+        debugger
         var _this = this;
         this.model.destroy({
             success() {
                 debugger
-                _this.mapUpdateLayer.test(_this.model.collection);
+                _this.mapUpdateLayer.test();
             },
             headers: {
                 'Authorization': 'Token d2ca14ecfd5a10dbb26296dccc4d510b0396fe3a'
@@ -406,7 +407,7 @@ var PageView = Mn.View.extend({
                 },
                 success: function (model) {
                     _this.collectionPoint.push(model);
-                    _this.mapUpdateLayer.test(_this.collectionPoint)
+                    _this.mapUpdateLayer.test()
                 }
             }
         )
@@ -458,7 +459,7 @@ var PageView = Mn.View.extend({
         this.collectionPoint.url = '/api/points/?description=' + $('#searchValue').val();
         this.collectionPoint.fetch({
             success: function () {
-                _this.mapUpdateLayer.test(_this.collectionPoint)
+                _this.mapUpdateLayer.test()
             },
             error: function () {
                 alert('Pizdec')

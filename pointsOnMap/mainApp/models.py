@@ -12,6 +12,9 @@ class Icon(models.Model):
 class Point(models.Model):
     title = models.TextField()
     description = models.TextField()
+
+    # location = models.PointField(srid=4326)
+
     x = models.DecimalField(max_digits=10, decimal_places=6)
     y = models.DecimalField(max_digits=10, decimal_places=6)
     icon = models.ForeignKey(Icon, on_delete=models.CASCADE)

@@ -5,9 +5,10 @@ var mapTemplate = _.template(
 );
 
 var formTemplate = _.template(
+    '<form role="form" class="form-horizontal">\n' +
     '<div class="row form-group">\n' +
     '<label for="titleId" class="col-form-label col-md-1">Title</label>\n' +
-    '<div class="col-md-11">\n' +
+    '<div class="col-md-10">\n' +
     '<input type="text" class="form-control" id="titleId" placeholder="Enter Title">\n' +
     '</div>\n' +
     '</div>\n' +
@@ -36,7 +37,8 @@ var formTemplate = _.template(
     '</div>\n' +
     '<div class="form-group">\n' +
     '<input type="button" id="saveModelId" class="btn btn-success col-md-12" value="Save">\n' +
-    '</div>\n');
+    '</div>\n' +
+    '</form>\n');
 
 var searchTempalte = _.template(
     '<div class="row form-group" >' +
@@ -47,12 +49,13 @@ var searchTempalte = _.template(
     '</div>');
 
 var pageTemplate = _.template(
+    '<div id="upPanel">' +
+    '<div id="formRegion"></div>' +
+    '</div>' +
     '<div id="searchBlock">' +
     '<div id="searchRegion" class="row"></div>'  +
     '<div id="listRegion" class="row"></div>' +
-    '</div>' +
-    '<br/>\n' +
-    '<div id="formRegion"></div>');
+    '</div>');
 
 var pointChildViewTemplate = _.template('<div class="row">\n' +
     '<div class="card text-white bg-info mb-3" style="width: 27.5em;">\n' +

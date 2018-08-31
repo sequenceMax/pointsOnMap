@@ -5,7 +5,6 @@ var mapTemplate = _.template(
 );
 
 var formTemplate = _.template(
-    '<form action=""  role="form" class="form-horizontal" onsubmit="savePoint(this)">\n' +
     '<div class="row form-group">\n' +
     '<label for="titleId" class="col-form-label col-md-1">Title</label>\n' +
     '<div class="col-md-11">\n' +
@@ -37,11 +36,10 @@ var formTemplate = _.template(
     '</div>\n' +
     '<div class="form-group">\n' +
     '<input type="button" id="saveModelId" class="btn btn-success col-md-12" value="Save">\n' +
-    '</div>\n' +
-    '</form>\n');
+    '</div>\n');
 
 var searchTempalte = _.template(
-    '<div class="row form-group">' +
+    '<div class="row form-group" >' +
     '<input type="text" class="form-control col-md-9" id="searchValue">' +
     '<div class="col-md-3">' +
     '<input type="button" id = "searchId" class="btn btn-primary col" value="Search">' +
@@ -49,15 +47,12 @@ var searchTempalte = _.template(
     '</div>');
 
 var pageTemplate = _.template(
-    '<div class="col-md-7">\n' +
-    '<br/>\n' +
-    '<div id="formRegion"></div>' +
+    '<div id="searchBlock">' +
+    '<div id="searchRegion" class="row"></div>'  +
+    '<div id="listRegion" class="row"></div>' +
     '</div>' +
-    '</div>\n' +
-    '<div class="col-md-5" id="r1"  class="container-fluid" >' +
-    '<div id="searchRegion" class="row"></div>' +
-    '<div id="listRegion"  class="row"></div>' +
-    '</div>');
+    '<br/>\n' +
+    '<div id="formRegion"></div>');
 
 var pointChildViewTemplate = _.template('<div class="row">\n' +
     '<div class="card text-white bg-info mb-3" style="width: 27.5em;">\n' +
@@ -249,6 +244,8 @@ var SearchView = Mn.View.extend({
         this.mapUpdateLayer = mapUpdateLayer;
     },
 
+    id: 'searchBlock',
+
     className: 'col',
     template: searchTempalte,
 
@@ -327,11 +324,9 @@ var PointChildView = Mn.View.extend({
     },
 
     _delete: function () {
-        debugger
         var _this = this;
         this.model.destroy({
             success() {
-                debugger
                 _this.mapUpdateLayer.test();
             },
             headers: {
@@ -343,6 +338,8 @@ var PointChildView = Mn.View.extend({
 });
 
 var ListView = Mn.CollectionView.extend({
+
+    id: 'listView',
 
     initialize(collectionPoint, mapUpdateLayer) {
         this.collection = collectionPoint;
@@ -362,8 +359,6 @@ var ListView = Mn.CollectionView.extend({
 });
 
 var PageView = Mn.View.extend({
-
-    className: 'row',
 
     id: 'mainPage',
 
@@ -504,5 +499,7 @@ new App().start();
 // });
 //
 // map.addOverlay(popup);
+
+
 
 

@@ -30,12 +30,14 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'mainApp',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.gis',
 
     'django_summernote',
     'rest_framework',
@@ -81,7 +83,7 @@ WSGI_APPLICATION = 'pointsOnMap.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': '123456',

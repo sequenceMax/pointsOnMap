@@ -1,8 +1,34 @@
-.map {
-    height: 350px;
+#mapPage {
+    position: absolute;
+    width: 100%;
+    height: 100vh;
+    z-index: 1;
 }
 
 #listRegion {
-    height: 39rem;
+    width: 100%;
+    max-height: 88vh;
+    z-index: 2;
     overflow-y: scroll;
+}
+
+#searchBlock {
+    margin-top: 1%;
+    position: relative;
+    z-index: 2;
+    width: 29rem;
+    float: right;
+}
+
+#listView {
+
+}
+
+#searchRegion {
+    width: 100%;
+}
+
+body, html {
+    width: 100%;
+    height: 100%;
 }

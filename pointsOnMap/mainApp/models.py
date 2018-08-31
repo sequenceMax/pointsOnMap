@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.gis.db import models
 
 
 class Icon(models.Model):
@@ -10,15 +11,15 @@ class Icon(models.Model):
 
 
 class Point(models.Model):
-    title = models.TextField()
-    description = models.TextField()
+    title = models.TextField(default='')
+    description = models.TextField(default='')
 
-    # location = models.PointField(srid=4326)
+#    location = models.PointField(srid=4326, null=True)
 
-    x = models.DecimalField(max_digits=10, decimal_places=6)
-    y = models.DecimalField(max_digits=10, decimal_places=6)
+    x = models.DecimalField(max_digits=10, decimal_places=6, default=0)
+    y = models.DecimalField(max_digits=10, decimal_places=6, default=0)
     icon = models.ForeignKey(Icon, on_delete=models.CASCADE)
-    is_active = models.BooleanField(default=True)
+    # is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.title

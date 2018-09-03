@@ -20,9 +20,6 @@
     float: right;
 }
 
-#listView {
-
-}
 
 #searchRegion {
     width: 100%;
@@ -33,10 +30,28 @@ body, html {
     height: 100%;
 }
 
-#upPanel{
+#formRegion{
     position: relative;
     z-index: 2;
-    float: left;
-    width: 70vw;
+    width: 68.5vw;
     background-color: gainsboro;
+    display: none;
+    margin-left: 25px;
+    margin-top:20px;
+    border-radius: 5px;
+}
+#upPanel {
+    position: relative;
+    float: left;
+    z-index: 2;
+}
+
+#panelSettings {
+    width: 70vw;
+    margin-top: 1.5%;
+    float:right;
+}
+
+.labelClass{
+    text-align:center
 }

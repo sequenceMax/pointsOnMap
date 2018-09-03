@@ -1,44 +1,38 @@
 /////////////////// Templates ///////////////////
 
-var mapTemplate = _.template(
-    '<div id="popup"></div>\n'
-);
-
 var formTemplate = _.template(
-    '<form role="form" class="form-horizontal">\n' +
     '<div class="row form-group">\n' +
-    '<label for="titleId" class="col-form-label col-md-1">Title</label>\n' +
-    '<div class="col-md-10">\n' +
+    '<label for="titleId" class="col-form-label col-md-1 labelClass">Title</label>\n' +
+    '<div class="col-md-11">\n' +
     '<input type="text" class="form-control" id="titleId" placeholder="Enter Title">\n' +
     '</div>\n' +
     '</div>\n' +
     '<div class="row form-group">\n' +
-    '<label for="descriptionId" class="col-form-label col-md-2">Description</label>\n' +
-    '<div class="col-md-10">\n' +
+    '<label for="descriptionId" class="col-form-label col-md-1 labelClass">Description</label>\n' +
+    '<div class="col-md-11">\n' +
     '<input type="text" class="form-control" id="descriptionId" placeholder="Enter Description">\n' +
     '</div>\n' +
     '</div>\n' +
     '<div class="row form-group">\n' +
-    '<label for="coordinateXId" class="col-form-label col-md-1">X: </label>\n' +
+    '<label for="coordinateXId" class="col-form-label col-md-1 labelClass">X: </label>\n' +
     '<div class="col-md-11">\n' +
     '<input type="text" class="form-control" id="coordinateXId" placeholder="123.123456">\n' +
     '</div>\n' +
     '</div>\n' +
     '<div class="row form-group">\n' +
-    '<label for="coordinateYId" class="col-form-label col-md-1">Y: </label>\n' +
+    '<label for="coordinateYId" class="col-form-label col-md-1 labelClass">Y: </label>\n' +
     '<div class="col-md-11">\n' +
     '<input type="text" class="form-control" id="coordinateYId" placeholder="123.123456">\n' +
     '</div>\n' +
     '</div>\n' +
     '<div class="row form-group">\n' +
-    '<label for="chooseIconId" class="col-form-label col-md-1">Icon</label>\n' +
+    '<label for="chooseIconId" class="col-form-label col-md-1 labelClass">Icon</label>\n' +
     '<div class="col-md-11" id="innerSelect">\n' +
     '</div>\n' +
     '</div>\n' +
     '<div class="form-group">\n' +
     '<input type="button" id="saveModelId" class="btn btn-success col-md-12" value="Save">\n' +
-    '</div>\n' +
-    '</form>\n');
+    '</div>\n');
 
 var searchTempalte = _.template(
     '<div class="row form-group" >' +
@@ -51,6 +45,9 @@ var searchTempalte = _.template(
 var pageTemplate = _.template(
     '<div id="upPanel">' +
     '<div id="formRegion"></div>' +
+    '<div id="panelSettings"> ' +
+    '<input id="btnSavePanel" type="button" class="btn btn-primary" value="+" style="float:right">' +
+    '</div>'+
     '</div>' +
     '<div id="searchBlock">' +
     '<div id="searchRegion" class="row"></div>'  +
@@ -279,6 +276,34 @@ var PointChildView = Mn.View.extend({
     events: {
         'click @ui.deletePoint': '_delete',
         'click @ui.changePoint': '_change',
+        'click':'goToPoint',
+    },
+
+    goToPoint: function(){
+        var _this = this;
+        window.map.setView(new ol.View({
+                center: ol.proj.fromLonLat([+_this.model.get('x'), +_this.model.get('y')]),
+                zoom: 15
+            }));
+
+        window.map.on('click', function(evt) {
+        var feature = window.map.forEachFeatureAtPixel(evt.pixel,
+          function(feature) {
+            return feature;
+          });
+        if (feature) {
+          var coordinates = feature.getGeometry().getCoordinates();
+          popup.setPosition(coordinates);
+          $('#popUp').popover({
+            placement: 'top',
+            html: true,
+            content: feature.get('name')
+          });
+          $('#popUp').popover('show');
+        } else {
+          $('#popUp').popover('destroy');
+        }
+      });
     },
 
     _change: function () {
@@ -353,7 +378,7 @@ var ListView = Mn.CollectionView.extend({
 
     childView: PointChildView,
 
-    childViewOptions(model) {
+    childViewOptions() {
         return {
             mapUpdateLayer: this.mapUpdateLayer
         };
@@ -506,3 +531,10 @@ new App().start();
 
 
 
+
+$(document).ready(function(){
+    $("#changeView, #btnSavePanel").click(function(){
+        $("#formRegion").slideToggle("slow");
+        $(this).toggleClass("active");
+    });
+});

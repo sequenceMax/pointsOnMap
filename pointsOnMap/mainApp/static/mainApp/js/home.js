@@ -43,14 +43,14 @@ var searchTempalte = _.template(
     '</div>');
 
 var pageTemplate = _.template(
-    '<div id="upPanel">' +
+    '<div id="savePanel">' +
     '<div id="formRegion"></div>' +
     '<div id="panelSettings"> ' +
     '<input id="btnSavePanel" type="button" class="btn btn-primary" value="+" style="float:right">' +
-    '</div>'+
+    '</div>' +
     '</div>' +
     '<div id="searchBlock">' +
-    '<div id="searchRegion" class="row"></div>'  +
+    '<div id="searchRegion" class="row"></div>' +
     '<div id="listRegion" class="row"></div>' +
     '</div>');
 
@@ -276,34 +276,24 @@ var PointChildView = Mn.View.extend({
     events: {
         'click @ui.deletePoint': '_delete',
         'click @ui.changePoint': '_change',
-        'click':'goToPoint',
+        'click': 'goToPoint',
     },
 
-    goToPoint: function(){
+    goToPoint: function () {
         var _this = this;
         window.map.setView(new ol.View({
-                center: ol.proj.fromLonLat([+_this.model.get('x'), +_this.model.get('y')]),
-                zoom: 15
-            }));
-
-        window.map.on('click', function(evt) {
-        var feature = window.map.forEachFeatureAtPixel(evt.pixel,
-          function(feature) {
-            return feature;
-          });
-        if (feature) {
-          var coordinates = feature.getGeometry().getCoordinates();
-          popup.setPosition(coordinates);
-          $('#popUp').popover({
+            center: ol.proj.fromLonLat([+_this.model.get('x'), +_this.model.get('y')]),
+            zoom: 15
+        }));
+        $(window.element).popover('dispose');
+        var coordinates = window.map.getView().getCenter();
+        popup.setPosition(coordinates);
+        $(window.element).popover({
             placement: 'top',
             html: true,
-            content: feature.get('name')
-          });
-          $('#popUp').popover('show');
-        } else {
-          $('#popUp').popover('destroy');
-        }
-      });
+            content: _this.model.get('title')
+        });
+        $(window.element).popover('show');
     },
 
     _change: function () {
@@ -323,7 +313,7 @@ var PointChildView = Mn.View.extend({
                 }
             };
             this.model.save(attrib, {
-                patch:true,
+                patch: true,
                 success: function () {
                     _this.render();
 
@@ -495,6 +485,7 @@ var App = Mn.Application.extend({
     region: '#mainRegion',
 
     onBeforeStart() {
+
         var rasterLayer = new ol.layer.Tile({
             source: new ol.source.OSM()
         });
@@ -515,25 +506,53 @@ var App = Mn.Application.extend({
 
 new App().start();
 
+/////////////////////////////////////////////////////
 
-//
-// window.element = document.getElementById('popup');
-//
-// var popup = new ol.Overlay({
-//     element: element,
-//     positioning: 'bottom-center',
-//     stopEvent: false,
-//     offset: [0, 0]
-// });
-//
-// map.addOverlay(popup);
+window.element = document.getElementById('popup');
 
+var popup = new ol.Overlay({
+    element: element,
+    positioning: 'bottom-center',
+    stopEvent: false,
+    offset: [10, 0]
+});
 
+window.map.addOverlay(popup);
 
+window.map.on('click', function (evt) {
+    var feature = window.map.forEachFeatureAtPixel(evt.pixel,
+        function (feature) {
+            return feature;
+        });
+    if (feature) {
+        $(element).popover('dispose');
+        var coordinates = feature.getGeometry().getCoordinates();
+        popup.setPosition(coordinates);
+        $(element).popover({
+            placement: 'top',
+            html: true,
+            content: feature.get('name')
+        });
+        $(element).popover('show');
+    } else {
+        $(element).popover('dispose');
+    }
+});
 
+window.map.on('pointermove', function (e) {
+    if (e.dragging) {
+        $(window.element).popover('destroy');
+        return;
+    }
+    var pixel = window.map.getEventPixel(e.originalEvent);
+    var hit = window.map.hasFeatureAtPixel(pixel);
+    window.map.getTarget().style.cursor = hit ? 'pointer' : '';
+});
 
-$(document).ready(function(){
-    $("#changeView, #btnSavePanel").click(function(){
+/////////////////////////////////////////////////////
+
+$(document).ready(function () {
+    $("#changeView, #btnSavePanel").click(function () {
         $("#formRegion").slideToggle("slow");
         $(this).toggleClass("active");
     });

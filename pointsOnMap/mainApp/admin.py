@@ -3,7 +3,7 @@ from mainApp.models import Point, Icon
 
 
 class PointAdmin(admin.ModelAdmin):
-    list_display = ["title", "icon"]
+    list_display = ["title", "icon", "location"]
     search_fields = ["title"]
 
     class Meta:

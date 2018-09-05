@@ -4,11 +4,14 @@ coreapi==2.3.3
 coreschema==0.0.4
 Django==2.1
 django-cors-headers==2.2.0
+django-filter==2.0.0
 django-filters==0.2.1
 django-rest-swagger==2.1.2
 django-summernote==0.8.8.6
 django-templated-mail==1.1.1
 djangorestframework==3.7.7
+djangorestframework-filters==0.10.2
+djangorestframework-gis==0.13
 djangorestframework-jsonapi==2.4.0
 djangorestframework-jwt==1.11.0
 djoser==1.1.5

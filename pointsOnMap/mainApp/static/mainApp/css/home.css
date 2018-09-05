@@ -1,8 +1,11 @@
 #mapPage {
     position: absolute;
     width: 100%;
-    height: 100vh;
+    height: 100%;
     z-index: 1;
+
+     margin:0;
+ padding:0
 }
 
 #listRegion {
@@ -25,9 +28,11 @@
 }
 
 body, html {
+    margin:0;
     width: 100%;
     height: 100%;
 }
+
 
 #formRegion{
     position: relative;
@@ -53,4 +58,8 @@ body, html {
 
 .labelClass{
     text-align:center
+}
+
+#popup {
+    position:relative;
 }

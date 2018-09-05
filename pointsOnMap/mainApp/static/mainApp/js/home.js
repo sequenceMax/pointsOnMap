@@ -1,6 +1,6 @@
 /////////////////// Templates ///////////////////
 
-var formTemplate = _.template(
+let formTemplate = _.template(
     '<div class="row form-group">\n' +
     '<label for="titleId" class="col-form-label col-md-1 labelClass">Title</label>\n' +
     '<div class="col-md-11">\n' +
@@ -34,7 +34,7 @@ var formTemplate = _.template(
     '<input type="button" id="saveModelId" class="btn btn-success col-md-12" value="Save">\n' +
     '</div>\n');
 
-var searchTempalte = _.template(
+let searchTempalte = _.template(
     '<div class="row form-group" >' +
     '<input type="text" class="form-control col-md-9" id="searchValue">' +
     '<div class="col-md-3">' +
@@ -42,7 +42,7 @@ var searchTempalte = _.template(
     '</div>' +
     '</div>');
 
-var pageTemplate = _.template(
+let pageTemplate = _.template(
     '<div id="savePanel">' +
     '<div id="formRegion"></div>' +
     '<div id="panelSettings"> ' +
@@ -54,9 +54,9 @@ var pageTemplate = _.template(
     '<div id="listRegion" class="row"></div>' +
     '</div>');
 
-var pointChildViewTemplate = _.template('<div class="row">\n' +
+let pointChildViewTemplate = _.template('<div class="row">\n' +
     '<div class="card text-white bg-info mb-3" style="width: 27.5em;">\n' +
-    '<div class="card-header">X: <%= x %> Y: <%= y %> ' +
+    '<div class="card-header">X: <%= location.coordinates[0] %> Y: <%= location.coordinates[1] %> ' +
     '<div style="float: right;">' +
     '<input type="button" class="btn btn-light btn-sm" style="float: left;" id="changeView" value="Change" >\n' +
     '<input type="button" class="btn btn-danger btn-sm" style="float: right;" id="deleteView" value="Delete"></div>\n' +
@@ -68,12 +68,12 @@ var pointChildViewTemplate = _.template('<div class="row">\n' +
     '</div>\n' +
     '</div>');
 
-var IconChildViewTemplate = _.template('<%= title %>');
+let IconChildViewTemplate = _.template('<%= title %>');
 
 ///////////////////
 ///////////////////  Models ///////////////////
 
-var PointModel = Backbone.Model.extend({
+let PointModel = Backbone.Model.extend({
     urlRoot: function () {
         return '/api/points/';
     },
@@ -84,25 +84,26 @@ var PointModel = Backbone.Model.extend({
                 'title': obj.attributes.title,
                 'description': obj.attributes.description,
                 'icon': obj.relationships.icon.data.id,
-                'x': obj.attributes.x,
-                'y': obj.attributes.y
+                'location': {
+                    'type': 'Point',
+                    'coordinates': [+obj.attributes.location.coordinates[0], +obj.attributes.location.coordinates[1]]
+                }
             }
         }
-
         return {
             'id': obj.data.id,
             'title': obj.data.attributes.title,
             'description': obj.data.attributes.description,
             'icon': obj.data.relationships.icon.data.id,
-            'x': obj.data.attributes.x,
-            'y': obj.data.attributes.y
+            'location': {
+                'type': 'Point',
+                'coordinates': [+obj.data.attributes.location.coordinates[0], +obj.data.attributes.location.coordinates[1]]
+            }
         }
-
-
     }
 });
 
-var IconModel = Backbone.Model.extend({
+let IconModel = Backbone.Model.extend({
     parse: function (obj) {
         return {
             'id': obj.id,
@@ -117,19 +118,19 @@ var IconModel = Backbone.Model.extend({
 
 ///////////////////////////////////////////////////////////   params.url = _.result(model, 'url') + '/' || urlError();   в исходниках добавлен слеш
 
-var PointCollection = Backbone.Collection.extend({
+let PointCollection = Backbone.Collection.extend({
     model: PointModel,
     url: '/api/points/',
 });
 
-var IconCollection = Backbone.Collection.extend({
+let IconCollection = Backbone.Collection.extend({
     model: IconModel,
     url: '/api/icons/',
 });
 
 ///////////////////
 
-var MapView = Mn.MnObject.extend({
+let MapView = Mn.MnObject.extend({
 
     initialize: function (collectionPoint, collectionIcon) {
         this.collectionIcon = collectionIcon;
@@ -140,10 +141,10 @@ var MapView = Mn.MnObject.extend({
 
     test: function () {
 
-        var _this = this;
+        let _this = this;
 
-        var collectIconsFuture = [];
-        var count = 0;
+        let collectIconsFuture = [];
+        let count = 0;
 
         _this.collectionPoint.each(function (point) {
 
@@ -151,14 +152,14 @@ var MapView = Mn.MnObject.extend({
 
                 if (point.get('icon') === icon.get('id')) {
 
-                    var iconFeature = new ol.Feature({
+                    let iconFeature = new ol.Feature({
                         geometry: new ol.geom.Point(ol.proj.fromLonLat([
-                            +point.get('x'),
-                            +point.get('y')
+                            +point.get('location').coordinates[0],
+                            +point.get('location').coordinates[1]
                         ])),
                         name: point.get('title'),
                     });
-                    var iconStyle = new ol.style.Style({
+                    let iconStyle = new ol.style.Style({
                         image: new ol.style.Icon(({
                             anchor: [0, 0],
                             src: icon.get('image')
@@ -171,11 +172,11 @@ var MapView = Mn.MnObject.extend({
             })
         });
 
-        var vectorSource = new ol.source.Vector({
+        let vectorSource = new ol.source.Vector({
             features: collectIconsFuture
         });
 
-        var vectorLayer = new ol.layer.Vector({
+        let vectorLayer = new ol.layer.Vector({
             source: vectorSource
         });
 
@@ -187,7 +188,7 @@ var MapView = Mn.MnObject.extend({
     },
 });
 
-var FormView = Mn.View.extend({
+let FormView = Mn.View.extend({
     tagName: 'form',
 
     className: 'form-horizontal',
@@ -219,7 +220,7 @@ var FormView = Mn.View.extend({
     },
 });
 
-var IconChildView = Mn.View.extend({
+let IconChildView = Mn.View.extend({
 
     tagName: 'option',
     attributes: {
@@ -230,7 +231,7 @@ var IconChildView = Mn.View.extend({
     template: IconChildViewTemplate,
 });
 
-var IconList = Mn.CollectionView.extend({
+let IconList = Mn.CollectionView.extend({
     tagName: 'select',
     className: 'custom-select custom-select-md',
     id: 'chooseIconId',
@@ -238,7 +239,7 @@ var IconList = Mn.CollectionView.extend({
     childView: IconChildView,
 });
 
-var SearchView = Mn.View.extend({
+let SearchView = Mn.View.extend({
 
     initialize(mapUpdateLayer) {
         this.mapUpdateLayer = mapUpdateLayer;
@@ -258,7 +259,7 @@ var SearchView = Mn.View.extend({
     },
 });
 
-var PointChildView = Mn.View.extend({
+let PointChildView = Mn.View.extend({
 
     initialize(options) {
         this.mapUpdateLayer = options.mapUpdateLayer;
@@ -276,44 +277,61 @@ var PointChildView = Mn.View.extend({
     events: {
         'click @ui.deletePoint': '_delete',
         'click @ui.changePoint': '_change',
-        'click': 'goToPoint',
+        'click': '_goToPoint',
     },
 
-    goToPoint: function () {
-        var _this = this;
-        window.map.setView(new ol.View({
-            center: ol.proj.fromLonLat([+_this.model.get('x'), +_this.model.get('y')]),
-            zoom: 15
-        }));
-        $(window.element).popover('dispose');
-        var coordinates = window.map.getView().getCenter();
-        popup.setPosition(coordinates);
-        $(window.element).popover({
-            placement: 'top',
-            html: true,
-            content: _this.model.get('title')
+    _goToPoint: function () {
+
+        let _this = this;
+        this.coordinates = ol.proj.fromLonLat([+_this.model.get('location').coordinates[0],
+            +_this.model.get('location').coordinates[1]]);
+
+        window.map.on('moveend', function () {
+
+            $(window.element).popover('dispose');
+
+            popup.setPosition(_this.coordinates);
+
+            $(window.element).popover({
+                placement: 'top',
+                html: true,
+                content: _this.model.get('title')
+            });
+            $(window.element).popover('show');
         });
-        $(window.element).popover('show');
+        window.map.setView(new ol.View({
+            center: this.coordinates,
+            zoom: 3,
+            minZoom: 2
+        }));
     },
 
     _change: function () {
-        var _this = this;
+        let _this = this;
         if (this.check) {
-            var attrib = {
+            let attrib = {
                 data: {
                     'type': 'Point',
                     'id': this.model.id,
                     'attributes': {
                         'title': $('#titleId').val(),
                         'description': $('#descriptionId').val(),
-                        'x': $('#coordinateXId').val(),
-                        'y': $('#coordinateYId').val(),
                         'icon': $('#chooseIconId').val(),
+                        'location': {
+                            'type': 'Point',
+                            'coordinates': [
+                                +$('#coordinateXId').val(), +$('#coordinateYId').val()
+                            ]
+                        },
                     }
                 }
             };
             this.model.save(attrib, {
                 patch: true,
+                headers: {
+                    'Content-Type': 'application/vnd.api+json',
+                    'Authorization': 'Token d2ca14ecfd5a10dbb26296dccc4d510b0396fe3a'
+                },
                 success: function () {
                     _this.render();
 
@@ -322,27 +340,24 @@ var PointChildView = Mn.View.extend({
                     _this.check = false;
 
                 },
-                headers: {
-                    'Content-Type': 'application/vnd.api+json',
-                    'Authorization': 'Token d2ca14ecfd5a10dbb26296dccc4d510b0396fe3a'
+                error: function (model, response, options) {
+                    alert(response.responseJSON.errors.location)
                 }
             });
         } else {
             $('#titleId').val(this.model.get('title'));
             $('#descriptionId').val(this.model.get('description'));
-            $('#coordinateXId').val(this.model.get('x'));
-            $('#coordinateYId').val(this.model.get('y'));
             $('#chooseIconId').val(this.model.get('icon'));
-
+            $('#coordinateXId').val(this.model.get('location').coordinates[0]);
+            $('#coordinateYId').val(this.model.get('location').coordinates[1]);
             $('.btn').prop('disabled', true);
             this.$('#changeView').prop('disabled', false);
-
             this.check = true;
         }
     },
 
     _delete: function () {
-        var _this = this;
+        let _this = this;
         this.model.destroy({
             success() {
                 _this.mapUpdateLayer.test();
@@ -355,7 +370,7 @@ var PointChildView = Mn.View.extend({
 
 });
 
-var ListView = Mn.CollectionView.extend({
+let ListView = Mn.CollectionView.extend({
 
     id: 'listView',
 
@@ -373,10 +388,9 @@ var ListView = Mn.CollectionView.extend({
             mapUpdateLayer: this.mapUpdateLayer
         };
     }
-
 });
 
-var PageView = Mn.View.extend({
+let PageView = Mn.View.extend({
 
     id: 'mainPage',
 
@@ -398,15 +412,17 @@ var PageView = Mn.View.extend({
     },
 
     saveModel: function () {
-        var _this = this;
-        var model = new PointModel({
+        let _this = this;
+        let model = new PointModel({
             "data": {
                 'type': 'Point',
                 'attributes': {
                     'title': $('#titleId').val(),
                     'description': $('#descriptionId').val(),
-                    'x': $('#coordinateXId').val(),
-                    'y': $('#coordinateYId').val(),
+                    'location': {
+                        'type': 'Point',
+                        'coordinates': [+$('#coordinateXId').val(), +$('#coordinateYId').val()]
+                    },
                     'icon': $('#chooseIconId').val(),
                 }
             }
@@ -421,6 +437,9 @@ var PageView = Mn.View.extend({
                 success: function (model) {
                     _this.collectionPoint.push(model);
                     _this.mapUpdateLayer.test()
+                },
+                error: function (model, response, options) {
+                    alert(response.responseJSON.errors.location)
                 }
             }
         )
@@ -444,7 +463,7 @@ var PageView = Mn.View.extend({
 
     collectionUpdate: function () {
 
-        var _this = this;
+        let _this = this;
 
         this.collectionPoint.fetch({
             reset: true,
@@ -468,7 +487,7 @@ var PageView = Mn.View.extend({
     },
 
     searchClick: function () {
-        var _this = this;
+        let _this = this;
         this.collectionPoint.url = '/api/points/?description=' + $('#searchValue').val();
         this.collectionPoint.fetch({
             success: function () {
@@ -481,12 +500,12 @@ var PageView = Mn.View.extend({
     },
 });
 
-var App = Mn.Application.extend({
+let App = Mn.Application.extend({
     region: '#mainRegion',
 
     onBeforeStart() {
 
-        var rasterLayer = new ol.layer.Tile({
+        let rasterLayer = new ol.layer.Tile({
             source: new ol.source.OSM()
         });
 
@@ -495,7 +514,8 @@ var App = Mn.Application.extend({
             target: document.getElementById('map'),
             view: new ol.View({
                 center: ol.proj.fromLonLat([39.710919, 47.240019]),
-                zoom: 15
+                zoom: 15,
+                minZoom: 2
             })
         });
     },
@@ -506,11 +526,11 @@ var App = Mn.Application.extend({
 
 new App().start();
 
-/////////////////////////////////////////////////////
+/////////////////////////////////////////////////////WGS84
 
 window.element = document.getElementById('popup');
 
-var popup = new ol.Overlay({
+let popup = new ol.Overlay({
     element: element,
     positioning: 'bottom-center',
     stopEvent: false,
@@ -520,13 +540,19 @@ var popup = new ol.Overlay({
 window.map.addOverlay(popup);
 
 window.map.on('click', function (evt) {
-    var feature = window.map.forEachFeatureAtPixel(evt.pixel,
+
+    let coordinates = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
+
+    $('#coordinateXId').val(coordinates[0]);
+    $('#coordinateYId').val(coordinates[1]);
+
+    let feature = window.map.forEachFeatureAtPixel(evt.pixel,
         function (feature) {
             return feature;
         });
     if (feature) {
         $(element).popover('dispose');
-        var coordinates = feature.getGeometry().getCoordinates();
+        let coordinates = feature.getGeometry().getCoordinates();
         popup.setPosition(coordinates);
         $(element).popover({
             placement: 'top',
@@ -541,11 +567,11 @@ window.map.on('click', function (evt) {
 
 window.map.on('pointermove', function (e) {
     if (e.dragging) {
-        $(window.element).popover('destroy');
+        $(window.element).popover('dispose');
         return;
     }
-    var pixel = window.map.getEventPixel(e.originalEvent);
-    var hit = window.map.hasFeatureAtPixel(pixel);
+    let pixel = window.map.getEventPixel(e.originalEvent);
+    let hit = window.map.hasFeatureAtPixel(pixel);
     window.map.getTarget().style.cursor = hit ? 'pointer' : '';
 });
 

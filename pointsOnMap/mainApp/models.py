@@ -2,6 +2,11 @@ from django.db import models
 from django.contrib.gis.db import models
 
 
+class User(models.Model):
+    login = models.TextField(default='')
+    name = models.TextField(default='')
+
+
 class Icon(models.Model):
     title = models.TextField()
     image = models.ImageField(upload_to='mainApp/icons/', default='')
@@ -13,13 +18,9 @@ class Icon(models.Model):
 class Point(models.Model):
     title = models.TextField(default='')
     description = models.TextField(default='')
-
-#    location = models.PointField(srid=4326, null=True)
-
-    x = models.DecimalField(max_digits=10, decimal_places=6, default=0)
-    y = models.DecimalField(max_digits=10, decimal_places=6, default=0)
+    location = models.PointField(srid=4326, null=True)
     icon = models.ForeignKey(Icon, on_delete=models.CASCADE)
-    # is_active = models.BooleanField(default=True)
+    # user_create = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title

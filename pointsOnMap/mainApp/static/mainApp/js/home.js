@@ -1,72 +1,70 @@
 /////////////////// Templates ///////////////////
 
 let formTemplate = _.template(
-    '<div class="row form-group">\n' +
-    '<label for="titleId" class="col-form-label col-md-1 labelClass">Title</label>\n' +
-    '<div class="col-md-11">\n' +
-    '<input type="text" class="form-control" id="titleId" placeholder="Enter Title">\n' +
+    '<div class="labelBlock">\n' +
+    '<label for="titleId">Title</label>\n' +
+    '</div>' +
+    '<div  class="labelBlock">\n' +
+    '<input type="text" id="titleId" class="formInput inputSavePoint" placeholder="Enter Title">\n' +
     '</div>\n' +
+    '<div class="labelBlock">\n' +
+    '<label for="descriptionId" >Description</label>\n' +
     '</div>\n' +
-    '<div class="row form-group">\n' +
-    '<label for="descriptionId" class="col-form-label col-md-1 labelClass">Description</label>\n' +
-    '<div class="col-md-11">\n' +
-    '<input type="text" class="form-control" id="descriptionId" placeholder="Enter Description">\n' +
+    '<div class="labelBlock">\n' +
+    '<textarea rows="5" cols="10" id="descriptionId" class="formInput inputSavePoint" placeholder="Enter Description"></textarea>' +
     '</div>\n' +
+    '<div class="labelBlock">\n' +
+    '<label for="coordinateXId" >X: </label>\n' +
     '</div>\n' +
-    '<div class="row form-group">\n' +
-    '<label for="coordinateXId" class="col-form-label col-md-1 labelClass">X: </label>\n' +
-    '<div class="col-md-11">\n' +
-    '<input type="text" class="form-control" id="coordinateXId" placeholder="123.123456">\n' +
+    '<div class="labelBlock">\n' +
+    '<input type="text" id="coordinateXId" class="formInput inputSavePoint" placeholder="123.123456">\n' +
     '</div>\n' +
+    '<div class="labelBlock">\n' +
+    '<label for="coordinateYId" >Y: </label>\n' +
     '</div>\n' +
-    '<div class="row form-group">\n' +
-    '<label for="coordinateYId" class="col-form-label col-md-1 labelClass">Y: </label>\n' +
-    '<div class="col-md-11">\n' +
-    '<input type="text" class="form-control" id="coordinateYId" placeholder="123.123456">\n' +
+    '<div class="labelBlock">\n' +
+    '<input type="text" id="coordinateYId" class="formInput inputSavePoint" placeholder="123.123456">\n' +
     '</div>\n' +
+    '<div class="labelBlock">\n' +
+    '<label for="chooseIconId" >Icon</label>\n' +
     '</div>\n' +
-    '<div class="row form-group">\n' +
-    '<label for="chooseIconId" class="col-form-label col-md-1 labelClass">Icon</label>\n' +
-    '<div class="col-md-11" id="innerSelect">\n' +
-    '</div>\n' +
-    '</div>\n' +
-    '<div class="form-group">\n' +
-    '<input type="button" id="saveModelId" class="btn btn-success col-md-12" value="Save">\n' +
+    '<div   id="innerSelect"></div>\n' +
+    '<div  id="savePoint">\n' +
+    '<input type="button" id="saveModelId" class="btn btn-success" value="Save">\n' +
     '</div>\n');
 
 let searchTempalte = _.template(
-    '<div class="row form-group" >' +
-    '<input type="text" class="form-control col-md-9" id="searchValue">' +
-    '<div class="col-md-3">' +
-    '<input type="button" id = "searchId" class="btn btn-primary col" value="Search">' +
+    '<div id="searchInputBlock">' +
+    '<input type="text" id="searchValue" class="formInput">' +
     '</div>' +
+    '<div id="searchButton">' +
+    '<input type="button" class="btn btn-primary" id = "searchId" value="Search">' +
     '</div>');
 
 let pageTemplate = _.template(
-    '<div id="savePanel">' +
-    '<div id="formRegion"></div>' +
+    '<div id="searchBlock" >' +
+    '<div id="searchRegion"></div>' +
+    '<div id="listRegion"></div>' +
+    '</div>' +
+    '<div id="panelSettingsGroup">' +
     '<div id="panelSettings"> ' +
-    '<input id="btnSavePanel" type="button" class="btn btn-primary" value="+" style="float:right">' +
+    '<input id="btnSavePanel" type="button" value="+" class="btn btn-primary">' +
     '</div>' +
-    '</div>' +
-    '<div id="searchBlock">' +
-    '<div id="searchRegion" class="row"></div>' +
-    '<div id="listRegion" class="row"></div>' +
+    '<div id="formRegion"></div>' +
     '</div>');
 
-let pointChildViewTemplate = _.template('<div class="row">\n' +
-    '<div class="card text-white bg-info mb-3" style="width: 27.5em;">\n' +
-    '<div class="card-header">X: <%= location.coordinates[0] %> Y: <%= location.coordinates[1] %> ' +
-    '<div style="float: right;">' +
-    '<input type="button" class="btn btn-light btn-sm" style="float: left;" id="changeView" value="Change" >\n' +
-    '<input type="button" class="btn btn-danger btn-sm" style="float: right;" id="deleteView" value="Delete"></div>\n' +
+let pointChildViewTemplate = _.template(
+    '<div class="childElementCoord"><p>X: <%= location.coordinates[0] %> <br> Y: <%= location.coordinates[1] %> </p>' +
     '</div>' +
-    '<div class="card-body">\n' +
-    '<h5 class="card-title"><%= title %></h5>\n' +
-    '<p class="card-text"><%= description %></p>\n' +
-    '</div>\n' +
-    '</div>\n' +
-    '</div>');
+    '<div class="btnsSetElement">' +
+    '<input type="button" class="btn btn-danger " style="float: right;" id="deleteView" value="Delete">' +
+    '<input type="button" class="btn btn-light" style="float: right;" id="changeView" value="Change" >\n</div>\n' +
+    '<div class="childElementTitle">\n' +
+    '<h4><%= title %></h4>\n' +
+    '</div>' +
+    '<div class="childElementDescr">' +
+    '<p ><%= description %></p>\n' +
+    '</div>\n');
 
 let IconChildViewTemplate = _.template('<%= title %>');
 
@@ -191,7 +189,7 @@ let MapView = Mn.MnObject.extend({
 let FormView = Mn.View.extend({
     tagName: 'form',
 
-    className: 'form-horizontal',
+    className: 'formClass',
 
     attributes: {
         'role': 'form'
@@ -233,7 +231,7 @@ let IconChildView = Mn.View.extend({
 
 let IconList = Mn.CollectionView.extend({
     tagName: 'select',
-    className: 'custom-select custom-select-md',
+    className: 'selectClass',
     id: 'chooseIconId',
     template: false,
     childView: IconChildView,
@@ -241,13 +239,12 @@ let IconList = Mn.CollectionView.extend({
 
 let SearchView = Mn.View.extend({
 
+    className: 'searchView',
+
     initialize(mapUpdateLayer) {
         this.mapUpdateLayer = mapUpdateLayer;
     },
 
-    id: 'searchBlock',
-
-    className: 'col',
     template: searchTempalte,
 
     ui: {
@@ -261,12 +258,13 @@ let SearchView = Mn.View.extend({
 
 let PointChildView = Mn.View.extend({
 
+    className: 'childElement',
+
     initialize(options) {
         this.mapUpdateLayer = options.mapUpdateLayer;
         this.check = false;
     },
 
-    className: 'col',
     template: pointChildViewTemplate,
 
     ui: {
@@ -286,7 +284,7 @@ let PointChildView = Mn.View.extend({
         this.coordinates = ol.proj.fromLonLat([+_this.model.get('location').coordinates[0],
             +_this.model.get('location').coordinates[1]]);
 
-        window.map.on('moveend', function () {
+        window.eventKeyPopup = window.map.on('moveend', function () {
 
             $(window.element).popover('dispose');
 
@@ -341,7 +339,9 @@ let PointChildView = Mn.View.extend({
 
                 },
                 error: function (model, response, options) {
-                    alert(response.responseJSON.errors.location)
+                    for (let err in response.responseJSON.errors) {
+                        alert(response.responseJSON.errors[err])
+                    }
                 }
             });
         } else {
@@ -439,7 +439,9 @@ let PageView = Mn.View.extend({
                     _this.mapUpdateLayer.test()
                 },
                 error: function (model, response, options) {
-                    alert(response.responseJSON.errors.location)
+                    for (let err in response.responseJSON.errors) {
+                        alert(response.responseJSON.errors[err])
+                    }
                 }
             }
         )
@@ -540,6 +542,7 @@ let popup = new ol.Overlay({
 window.map.addOverlay(popup);
 
 window.map.on('click', function (evt) {
+    ol.Observable.unByKey(window.eventKeyPopup);
 
     let coordinates = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
 
@@ -566,6 +569,7 @@ window.map.on('click', function (evt) {
 });
 
 window.map.on('pointermove', function (e) {
+    ol.Observable.unByKey(window.eventKeyPopup);
     if (e.dragging) {
         $(window.element).popover('dispose');
         return;

@@ -284,7 +284,7 @@ let PointChildView = Mn.View.extend({
         this.coordinates = ol.proj.fromLonLat([+_this.model.get('location').coordinates[0],
             +_this.model.get('location').coordinates[1]]);
 
-        window.eventKeyPopup = window.map.on('moveend', function () {
+        window.eventKeysPopup[window.eventKeysPopup.length] = window.map.on('moveend', function () {
 
             $(window.element).popover('dispose');
 
@@ -299,7 +299,7 @@ let PointChildView = Mn.View.extend({
         });
         window.map.setView(new ol.View({
             center: this.coordinates,
-            zoom: 3,
+            zoom: 15,
             minZoom: 2
         }));
     },
@@ -520,6 +520,9 @@ let App = Mn.Application.extend({
                 minZoom: 2
             })
         });
+
+        window.eventKeysPopup = [];
+
     },
     onStart() {
         this.showView(new PageView());
@@ -542,7 +545,7 @@ let popup = new ol.Overlay({
 window.map.addOverlay(popup);
 
 window.map.on('click', function (evt) {
-    ol.Observable.unByKey(window.eventKeyPopup);
+    window.deletePopups();
 
     let coordinates = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
 
@@ -569,7 +572,6 @@ window.map.on('click', function (evt) {
 });
 
 window.map.on('pointermove', function (e) {
-    ol.Observable.unByKey(window.eventKeyPopup);
     if (e.dragging) {
         $(window.element).popover('dispose');
         return;
@@ -579,6 +581,11 @@ window.map.on('pointermove', function (e) {
     window.map.getTarget().style.cursor = hit ? 'pointer' : '';
 });
 
+window.map.on('pointerdrag', function () {
+    window.deletePopups();
+});
+
+
 /////////////////////////////////////////////////////
 
 $(document).ready(function () {
@@ -587,3 +594,11 @@ $(document).ready(function () {
         $(this).toggleClass("active");
     });
 });
+
+
+window.deletePopups = function () {
+    for (let i = window.eventKeysPopup.length - 1; i >= 0; i--) {
+        ol.Observable.unByKey(window.eventKeysPopup[i]);
+        window.eventKeysPopup[i] = undefined;
+    }
+};

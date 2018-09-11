@@ -40,6 +40,25 @@ body {
     margin-right: 15px;
 }
 
+#listRegion {
+    width: 92.5%;
+    max-height: 88vh;
+    overflow-y: auto;
+    margin-top: 10px;
+}
+
+#listView {
+
+}
+
+#descriptionId {
+    height: 4em;
+}
+
+.inputSavePoint {
+    width: 100%;
+}
+
 #panelSettingsGroup {
     float: right;
     margin-top: 1%;
@@ -60,6 +79,10 @@ body {
 }
 
 .labelBlock {
+    text-align: center;
+}
+
+.labelBlockDescr {
     text-align: center;
 }
 
@@ -101,6 +124,7 @@ body {
 .formClass {
     display: grid;
     grid-template-columns: [startCollumn] 1fr 2fr [endCollumn];
+    grid-template-rows: 1fr 2fr 1fr 1fr 1fr 1fr;
     grid-row-gap: 5px;
     padding: 5px;
 }
@@ -112,7 +136,7 @@ body {
 
 .formInput {
     display: block;
-    height: calc(1rem + 2px);
+    height: calc(2rem + 2px);
     padding: .375rem .75rem;
     font-size: 1rem;
     line-height: 1;
@@ -133,18 +157,16 @@ body {
     z-index: 2;
 }
 
+.searchView{
+    display: grid;
+
+    grid-template-columns: 3fr 1fr;
+
+    grid-column-gap: 10px;
+}
+
 #searchValue {
-    width: 20em;
-}
-
-#searchInputBlock {
-    display: inline-block;
-    width: 22em;
-}
-
-#searchButton {
-    width: 20%;
-    display: inline-block;
+    width: 100%;
 }
 
 .childElement {
@@ -186,25 +208,6 @@ body {
 
 .childElementDescr > p {
     width: 380px;
-}
-
-#listRegion {
-    width: 92.5%;
-    max-height: 88vh;
-    overflow-y: auto;
-    margin-top: 10px;
-}
-
-#listView {
-
-}
-
-#descriptionId {
-    height: 2em;
-}
-
-.inputSavePoint {
-    width: 92%;
 }
 
 #btnSavePanel {
@@ -510,65 +513,40 @@ a.btn.disabled, fieldset:disabled a.btn {
 
 /* ----------- buttons ----------------------*/
 
-@media screen  and (max-width: 1100px) {
+@media screen  and (max-width: 1102px) {
 
     #fullScreenAppId {
-
-        width: 100%;
-
         display: grid;
-
-        /*grid-template-columns: 1fr 1fr;*/
-
-        grid-template-rows: [mapTop] 2fr [mapBottom] 80px [mainPageTop] 3fr [mainPageBottom];
-
-        /*grid-row-gap: 40px;*/
+        grid-template-rows: 70% 30%;
     }
 
-    #fullScreenAppId > #mapPage {
-        grid-area: map;
+    #mapPage {
+        position: relative;
+        height: auto;
+}
 
-        grid-row-start: mapTop;
-        grid-row-end: mapBottom;
-
-        height: 70%;
-    }
-
-    #fullScreenAppId > #mainRegion {
-        grid-area: mainReg;
-
-        grid-row-start: mainPageTop;
-        grid-row-end: mainPageBottom;
-
+    #mainRegion {
+        position: relative;
         z-index: 1;
     }
 
     #mainPage {
         display: grid;
 
-        grid-template-columns: [leftSide] 1fr [first] 4fr [second] 1fr [rightSide];
+        grid-template-columns: 1fr 2fr 1fr;
 
-        grid-template-rows: [topSettingsBlock] auto [buttomSettingsBlock topSearchBlock] auto [buttomSearchBlock];
+        grid-template-rows: auto auto;
 
-        grid-template-areas: '. settings .' '.  search .';
-
-        grid-row-gap: 10px;
+        grid-template-areas: '. panelSettings . '
+                             '. search .';
     }
 
-    #mainPage > #panelSettingsGroup {
-        grid-area: settings;
-
-        grid-row-start: topSettingsBlock;
-        grid-row-end: buttomSettingsBlock;
-
+   #panelSettingsGroup {
+        grid-area: panelSettings;
     }
 
-    #mainPage > #searchBlock {
+    #searchBlock {
         grid-area: search;
-
-        grid-row-start: topSearchBlock;
-        grid-row-end: buttomSearchBlock;
-
     }
 
     .childElementTitle > h4 {

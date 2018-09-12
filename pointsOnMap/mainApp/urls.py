@@ -12,5 +12,5 @@ router.register('points', views.PointViewSet, base_name='pointRouter')
 
 urlpatterns = [
                   path('api/', include(router.urls)),
-                  url(r'^$', views.test),
+                  url(r'^$', views.homePage),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

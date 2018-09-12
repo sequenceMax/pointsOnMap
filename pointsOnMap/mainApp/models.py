@@ -1,11 +1,6 @@
 from django.contrib.gis.db import models
 
 
-class User(models.Model):
-    login = models.TextField(default='')
-    name = models.TextField(default='')
-
-
 class Icon(models.Model):
     title = models.TextField()
     image = models.ImageField(upload_to='mainApp/icons/', default='')

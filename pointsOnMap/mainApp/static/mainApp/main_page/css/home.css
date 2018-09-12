@@ -1,0 +1,304 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+h4 {
+    margin-bottom: .5rem;
+    font-family: inherit;
+    font-weight: 500;
+    line-height: 1.2;
+    color: inherit;
+    font-size: 1.25rem
+}
+
+body {
+    width: 100%;
+    height: 100%;
+    overflow-wrap: break-word;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+#mapPage {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    margin: 0;
+    padding: 0;
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+}
+
+#searchBlock {
+    margin-top: 1%;
+    width: 29rem;
+    float: right;
+    margin-right: 15px;
+}
+
+#listRegion {
+    width: 92.5%;
+    max-height: 88vh;
+    overflow-y: auto;
+    margin-top: 10px;
+}
+
+#listView {
+
+}
+
+#descriptionId {
+    height: 4em;
+}
+
+.inputSavePoint {
+    width: 100%;
+}
+
+#panelSettingsGroup {
+    float: right;
+    margin-top: 1%;
+    margin-right: 2%;
+}
+
+#panelSettings {
+    position: relative;
+}
+
+#formRegion {
+    width: 35em;
+    float: right;
+    background-color: gainsboro;
+    display: none;
+    margin-top: 5%;
+    border-radius: 5px;
+}
+
+.labelBlock {
+    text-align: center;
+}
+
+.labelBlockDescr {
+    text-align: center;
+}
+
+.selectClass {
+    display: inline-block;
+    width: 99%;
+    height: calc(1.95rem + 2px);
+    padding: .375rem 1.75rem .375rem .75rem;
+    line-height: 1.5;
+    color: #495057;
+    vertical-align: middle;
+    background: #fff url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3E") no-repeat right .75rem center;
+    background-size: 8px 10px;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    height: calc(2.25rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out
+}
+
+#saveModelId {
+    width: 100%;
+}
+
+.formClass {
+    display: grid;
+    grid-template-columns: [startCollumn] 1fr 2fr [endCollumn];
+    grid-template-rows: 1fr 2fr 1fr 1fr 1fr 1fr;
+    grid-row-gap: 5px;
+    padding: 5px;
+}
+
+.formClass > :nth-child(11) {
+    grid-column-start: startCollumn;
+    grid-column-end: endCollumn;
+}
+
+.formInput {
+    display: block;
+    height: calc(2rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out
+}
+
+#popup {
+    position: relative;
+}
+
+#mainRegion {
+    position: relative;
+    z-index: 2;
+}
+
+.searchView {
+    display: grid;
+
+    grid-template-columns: 4fr 1fr;
+
+    grid-column-gap: 10px;
+}
+
+#searchValue {
+    width: 100%;
+}
+
+.childElement {
+
+    display: grid;
+
+    grid-template-columns: [startColumn] 1fr [secondCollumn] 1fr [thirdCollumn] 1fr [fourthCollumn] 1fr [endCollumn];
+
+    grid-template-rows: [mainTop] auto [mainDown titleTop] 1fr [titleDown descrTop] auto [descrDown];
+
+    grid-template-areas: 'coord coord btns btns' 'title title title title' 'descr descr descr descr';
+
+    background-color: #ff9e72;
+    border-radius: 8px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    padding: 2.5%;
+}
+
+.childElement > .childElementCoord {
+    grid-area: coord;
+}
+
+.childElement > .btnsSetElement {
+    grid-area: btns;
+}
+
+.childElement > .childElementTitle {
+    grid-area: title;
+}
+
+.childElement > .childElementDescr {
+    grid-area: descr;
+}
+
+.childElementTitle > h4 {
+    width: 380px;
+}
+
+.childElementDescr > p {
+    width: 380px;
+}
+
+#btnSavePanel {
+    float: right;
+}
+
+/* ----------------- buttons ------------------*/
+
+.btn {
+    display: inline-block;
+    font-weight: 400;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border: 1px solid transparent;
+    padding: .275rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: .25rem;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out
+}
+
+/* ----------- buttons ----------------------*/
+
+@media screen  and (max-width: 1102px) {
+
+    #fullScreenAppId {
+        display: grid;
+        grid-template-rows: 70% 30%;
+    }
+
+    #mapPage {
+        position: relative;
+        height: auto;
+    }
+
+    #mainRegion {
+        position: relative;
+        z-index: 1;
+    }
+
+    #mainPage {
+        display: grid;
+
+        grid-template-columns: 1fr 2fr 1fr;
+
+        grid-template-rows: auto auto;
+
+        grid-template-areas: '. panelSettings . ' '. search .';
+    }
+
+    #panelSettingsGroup {
+        grid-area: panelSettings;
+        margin-right: 0;
+    }
+
+    #searchBlock {
+        grid-area: search;
+    margin-right: 0;
+
+    }
+
+    .childElementTitle > h4 {
+        width: 330px;
+        overflow-wrap: break-word;
+    }
+
+    .childElementDescr > p {
+        width: 330px;
+        overflow-wrap: break-word;
+    }
+
+    #listRegion{
+        width: 100%;
+    }
+
+    #searchId{
+        width: 100%;
+    }
+
+    #panelSettings {
+        position: inherit;
+    }
+
+    #btnSavePanel {
+        position: relative;
+        float: left;
+    }
+}
+

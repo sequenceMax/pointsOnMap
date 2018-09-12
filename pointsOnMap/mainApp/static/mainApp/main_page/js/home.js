@@ -1,3 +1,13 @@
+let oldSync = Backbone.sync;
+Backbone.sync = function(method, model, options){
+    options.beforeSend = function(xhr){
+        let token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNTM2NzY1Nzc1LCJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSJ9.TwMtwb4RMBFu8NEg-AjduQAy-WsjJGHZKnHzzil8zRE';
+        xhr.setRequestHeader('Content-Type', 'application/vnd.api+json');
+        xhr.setRequestHeader('Authorization','Token ' + token);
+    };
+    return oldSync(method, model, options);
+};
+
 /////////////////// Templates ///////////////////
 
 let formTemplate = _.template(
@@ -326,10 +336,6 @@ let PointChildView = Mn.View.extend({
             };
             this.model.save(attrib, {
                 patch: true,
-                headers: {
-                    'Content-Type': 'application/vnd.api+json',
-                    'Authorization': 'Token d2ca14ecfd5a10dbb26296dccc4d510b0396fe3a'
-                },
                 success: function () {
                     _this.render();
 
@@ -362,9 +368,6 @@ let PointChildView = Mn.View.extend({
             success() {
                 _this.mapUpdateLayer.test();
             },
-            headers: {
-                'Authorization': 'Token d2ca14ecfd5a10dbb26296dccc4d510b0396fe3a'
-            }
         })
     },
 
@@ -430,10 +433,6 @@ let PageView = Mn.View.extend({
 
         model.save(
             null, {
-                headers: {
-                    'Content-Type': 'application/vnd.api+json',
-                    'Authorization': 'Token d2ca14ecfd5a10dbb26296dccc4d510b0396fe3a'
-                },
                 success: function (model) {
                     _this.collectionPoint.push(model);
                     _this.mapUpdateLayer.test()
@@ -602,3 +601,5 @@ window.deletePopups = function () {
         window.eventKeysPopup[i] = undefined;
     }
 };
+
+

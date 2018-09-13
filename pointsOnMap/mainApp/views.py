@@ -1,6 +1,5 @@
 from collections import OrderedDict
 
-from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from rest_framework import viewsets, permissions
 from rest_framework.exceptions import ValidationError
@@ -45,15 +44,12 @@ class IconViewSet(viewsets.ModelViewSet):
 
 
 def homePage(request):
-    # token = request.COOKIES['csrftoken']
-    token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9' \
-            '.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNTM2NzY1Nzc1LCJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSJ9' \
-            '.TwMtwb4RMBFu8NEg-AjduQAy-WsjJGHZKnHzzil8zRE'
+    token = request.COOKIES['csrftoken']
     attr = OrderedDict([('token', token)])
-
     try:
-        d = VerifyJSONWebTokenSerializer().validate(attr)
+        VerifyJSONWebTokenSerializer().validate(attr)
     except ValidationError as e:
-        return render(request, 'mainApp/authorization/index.html')
+        print(e.detail[0])
+        return render(request, '../../security_app/templates/security_app/index.html')
 
     return render(request, 'mainApp/home.html')

@@ -69,6 +69,15 @@ body {
     position: relative;
 }
 
+#exit{
+    display: inline-block;
+    margin-left: 10px;
+    margin-bottom: 10px;
+}
+#username_id{
+    display: inline-block;
+}
+
 #formRegion {
     width: 35em;
     float: right;

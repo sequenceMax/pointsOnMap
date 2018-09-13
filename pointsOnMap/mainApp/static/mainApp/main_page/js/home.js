@@ -1,9 +1,9 @@
 let oldSync = Backbone.sync;
-Backbone.sync = function(method, model, options){
-    options.beforeSend = function(xhr){
-        let token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNTM2NzY1Nzc1LCJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSJ9.TwMtwb4RMBFu8NEg-AjduQAy-WsjJGHZKnHzzil8zRE';
+Backbone.sync = function (method, model, options) {
+    options.beforeSend = function (xhr) {
+        let token = $.cookie('csrftoken');
         xhr.setRequestHeader('Content-Type', 'application/vnd.api+json');
-        xhr.setRequestHeader('Authorization','Token ' + token);
+        xhr.setRequestHeader('Authorization', 'Token ' + token);
     };
     return oldSync(method, model, options);
 };
@@ -58,7 +58,12 @@ let pageTemplate = _.template(
     '</div>' +
     '<div id="panelSettingsGroup">' +
     '<div id="panelSettings"> ' +
-    '<input id="btnSavePanel" type="button" value="+" class="btn btn-primary">' +
+    '<div id="userPanel" style="float: right">' +
+    '<div id="username_id"><%= localStorage.getItem("username") %></div>' +
+    '<input id="exit" type="button" value="exit" class="btn btn-danger">' +
+    '</div>' +
+    '<div><input id="btnSavePanel" type="button" value="+" class="btn btn-primary">' +
+    '</div>' +
     '</div>' +
     '<div id="formRegion"></div>' +
     '</div>');
@@ -342,7 +347,6 @@ let PointChildView = Mn.View.extend({
                     $('.btn').prop('disabled', false);
                     _this.mapUpdateLayer.test();
                     _this.check = false;
-
                 },
                 error: function (model, response, options) {
                     for (let err in response.responseJSON.errors) {
@@ -592,7 +596,9 @@ $(document).ready(function () {
         $("#formRegion").slideToggle("slow");
         $(this).toggleClass("active");
     });
+
 });
+
 
 
 window.deletePopups = function () {
@@ -603,3 +609,8 @@ window.deletePopups = function () {
 };
 
 
+$('#exit').click(function () {
+    localStorage.removeItem('username');
+    $.cookie('csrftoken', undefined);
+    location.reload();
+});

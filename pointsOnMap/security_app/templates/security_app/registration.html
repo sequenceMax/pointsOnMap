@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Contact V8</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+     <link rel="stylesheet" href="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.1.3/css/ol.css"
+          type="text/css">
+    <script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.1.3/build/ol.js"></script>
+
+    {% load staticfiles %}
+<!--===============================================================================================-->
+	<link rel="icon" type="image/png" href="{% static 'security_app/images/icons/favicon.ico' %}"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'security_app/vendor/bootstrap/css/bootstrap.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'security_app/fonts/font-awesome-4.7.0/css/font-awesome.min.css' %} ">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'security_app/fonts/Linearicons-Free-v1.0.0/icon-font.min.css' %} ">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'security_app/vendor/animate/animate.css' %} ">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'security_app/vendor/css-hamburgers/hamburgers.min.css' %} ">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'security_app/vendor/animsition/css/animsition.min.css' %} ">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'security_app/vendor/select2/select2.min.css' %} ">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'security_app/vendor/daterangepicker/daterangepicker.css' %} ">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'security_app/css/util.css' %} ">
+	<link rel="stylesheet" type="text/css" href="{% static 'security_app/css/main.css' %} ">
+<!--===============================================================================================-->
+</head>
+<body>
+
+	<div class="container-contact100">
+		<div class="contact100-map" id="map"></div>
+
+		<div class="wrap-contact100">
+			<form class="contact100-form validate-form">
+                    <span class="contact100-form-title" style="display: block">
+					    Registration
+				    </span>
+                <div id="errors"></div>
+
+				<div class="wrap-input100 validate-input" >
+					<input class="input100" type="text" name="name" id="loginInput" placeholder="Login" style="width: 100%">
+                    <span class="focus-input100-1"></span>
+					<span class="focus-input100-2"></span>
+				</div>
+
+                <div class="wrap-input100 validate-input" >
+					<input class="input100" type="text" name="email" placeholder="Email" id="emailInput">
+					<span class="focus-input100-1"></span>
+					<span class="focus-input100-2"></span>
+				</div>
+
+				<div class="wrap-input100 validate-input">
+					<input class="input100" type="password" name="pass" id="passInput" placeholder="***************" >
+                    <span class="focus-input100-1"></span>
+					<span class="focus-input100-2"></span>
+				</div>
+
+                <div>
+					<input class="contact100-form-btn" value="Sign Up" id="signup" type="button" style="width: 100%;">
+                </div>
+			</form>
+		</div>
+	</div>
+
+
+
+	<div id="dropDownSelect1"></div>
+
+<!--===============================================================================================-->
+	<script src="{% static 'security_app/vendor/jquery/jquery-3.2.1.min.js' %} "></script>
+    <script src="{% static 'security_app/vendor/jquery/jQueryCookie.js' %} "></script>
+<!--===============================================================================================-->
+	<script src="{% static 'security_app/vendor/animsition/js/animsition.min.js' %} "></script>
+<!--===============================================================================================-->
+	<script src="{% static 'security_app/vendor/bootstrap/js/popper.js' %} "></script>
+	<script src="{% static 'security_app/vendor/bootstrap/js/bootstrap.min.js' %} "></script>
+<!--===============================================================================================-->
+	<script src="{% static 'security_app/vendor/select2/select2.min.js' %} "></script>
+<!--===============================================================================================-->
+	<script src="{% static 'security_app/vendor/daterangepicker/moment.min.js' %} "></script>
+	<script src="{% static 'security_app/vendor/daterangepicker/daterangepicker.js' %} "></script>
+<!--===============================================================================================-->
+	<script src="{% static 'security_app/vendor/countdowntime/countdowntime.js' %} "></script>
+<!--===============================================================================================-->
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAKFWBqlKAGCeS1rMVoaNlwyayu0e0YRes"></script>
+	<script src="{% static 'security_app/js/map-custom.js' %} "></script>
+<!--===============================================================================================-->
+	<script src="{% static '/security_app/js/registration/reg.js' %} "></script>
+
+
+</body>
+</html>

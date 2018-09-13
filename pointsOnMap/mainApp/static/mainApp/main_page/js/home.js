@@ -59,7 +59,7 @@ let pageTemplate = _.template(
     '<div id="panelSettingsGroup">' +
     '<div id="panelSettings"> ' +
     '<div id="userPanel" style="float: right">' +
-    '<div id="username_id"><%= localStorage.getItem("username") %></div>' +
+    '<div id="username_id"><%= $("#username").text() %></div>' +
     '<input id="exit" type="button" value="exit" class="btn btn-danger">' +
     '</div>' +
     '<div><input id="btnSavePanel" type="button" value="+" class="btn btn-primary">' +
@@ -596,7 +596,6 @@ $(document).ready(function () {
         $("#formRegion").slideToggle("slow");
         $(this).toggleClass("active");
     });
-
 });
 
 

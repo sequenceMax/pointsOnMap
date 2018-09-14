@@ -20,20 +20,20 @@ $('#signin').click(function (event) {
             location.reload();
         },
         error: function (error) {
-        let errorMsg =  parseTextError(error);
-        $('#errors').empty().append(errorMsg);
+            let errorMsg = parseTextError(error);
+            $('#errors').empty().append(errorMsg);
 
-        function parseTextError(error){
-            let msg = '';
-            for (let errType in error.responseJSON.errors){
-                if(errType === 'username' || errType === 'password'){
-                    msg += errType + ' : ' + error.responseJSON.errors[errType] + '<br>';
-                } else if(errType === 'non_field_errors'){
-                    msg = 'unreliable login or password'
+            function parseTextError(error) {
+                let msg = '';
+                for (let errType in error.responseJSON.errors) {
+                    if (errType === 'username' || errType === 'password') {
+                        msg += errType + ' : ' + error.responseJSON.errors[errType] + '<br>';
+                    } else if (errType === 'non_field_errors') {
+                        msg = 'unreliable login or password'
+                    }
                 }
+                return msg;
             }
-            return msg;
-        }
         }
     });
 });

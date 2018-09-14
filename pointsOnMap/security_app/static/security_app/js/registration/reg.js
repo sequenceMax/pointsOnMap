@@ -31,11 +31,11 @@ $('#signup').click(function () {
                 contentType: false,
                 success: function (data) {
                     let token = data.data.token;
-                    $.cookie('csrftoken', token, { path: '/' });
+                    $.cookie('csrftoken', token, {path: '/'});
                     $(location).attr('href', '/')
                 },
                 error: function (error) {
-                   console.log('Kakoi-to pizdec', error)
+                    console.log('Kakoi-to pizdec', error)
                 }
             });
 

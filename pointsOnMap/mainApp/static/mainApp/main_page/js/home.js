@@ -58,7 +58,7 @@ let pageTemplate = _.template(
     '</div>' +
     '<div id="panelSettingsGroup">' +
     '<div id="panelSettings"> ' +
-    '<div id="userPanel" style="float: right">' +
+    '<div id="userPanel">' +
     '<div id="username_id"><%= $("#username").text() %></div>' +
     '<input id="exit" type="button" value="exit" class="btn btn-danger">' +
     '</div>' +
@@ -493,7 +493,7 @@ let PageView = Mn.View.extend({
 
     searchClick: function () {
         let _this = this;
-        this.collectionPoint.url = '/api/points/?description=' + $('#searchValue').val();
+        this.collectionPoint.url = '/api/points/?search=' + $('#searchValue').val();
         this.collectionPoint.fetch({
             success: function () {
                 _this.mapUpdateLayer.test()
@@ -597,7 +597,6 @@ $(document).ready(function () {
         $(this).toggleClass("active");
     });
 });
-
 
 
 window.deletePopups = function () {

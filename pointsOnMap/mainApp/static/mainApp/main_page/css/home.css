@@ -74,8 +74,14 @@ body {
     margin-left: 10px;
     margin-bottom: 10px;
 }
+
+#userPanel {
+    float: right;
+}
+
 #username_id{
     display: inline-block;
+    background-color: #eff0ac;
 }
 
 #formRegion {

@@ -31,11 +31,13 @@ class IconViewSet(viewsets.ModelViewSet):
 
 
 def homePage(request):
-    token = request.COOKIES['csrftoken']
-    attr = OrderedDict([('token', token)])
     try:
+        token = request.COOKIES['csrftoken']
+        attr = OrderedDict([('token', token)])
         d = VerifyJSONWebTokenSerializer().validate(attr)
     except ValidationError as e:
+        return render(request, '../../security_app/templates/security_app/index.html')
+    except KeyError as e:
         return render(request, '../../security_app/templates/security_app/index.html')
 
     return render(request, 'mainApp/home.html', {'username': d['user'].username})

@@ -91,7 +91,7 @@ WSGI_APPLICATION = 'pointsOnMap.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'postgres',
+        'NAME': 'test_db',
         'USER': 'postgres',
         'PASSWORD': '123456',
         'HOST': 'localhost',
